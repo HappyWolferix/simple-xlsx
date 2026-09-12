@@ -132,7 +132,8 @@ if the file grows past 125 kB, and warns above the 120 kB goal. When adding a
 feature costs more bytes than it is worth to a person keeping a household budget, it
 does not go in.
 
-When releasing, bump `<meta name="app-version">` in the `<head>`.
+When releasing, bump `<meta name="app-version">` in the `<head>` and move the
+`Unreleased` section of [CHANGELOG.md](CHANGELOG.md) under the new number.
 
 ## License
 
