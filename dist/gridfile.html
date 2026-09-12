@@ -1,0 +1,2651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="app-version" content="1.1.0">
+<title>Simple xlsx</title>
+<style>:root{--bg:#f4f6f8;--panel:#ffffff;--line:#dde3ea;--line-strong:#c3ccd6;--ink:#1c2733;--ink-soft:#5b6b7c;--accent:#0e6e6a;--accent-soft:#e2f1f0;--sel:#0e6e6a;--sel-fill:rgba(14,110,106,.08);--head:#eef1f5}*{box-sizing:border-box}html,body{height:100%}body{margin:0;font:13px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg);display:flex;flex-direction:column}button,select,input{font:inherit;color:inherit}button{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 10px;cursor:pointer}button:disabled{opacity:.45;cursor:default}button[aria-pressed="true"]{background:var(--sel-fill);border-color:var(--accent);color:var(--accent)}input:disabled{opacity:.45;cursor:default}label:has(input:disabled){opacity:.6}.swdot{display:inline-block;width:12px;height:12px;border:1px solid rgba(0,0,0,.28);border-radius:3px;vertical-align:-2px;background:#fff}.bdico{display:inline-block;width:12px;height:12px;border:1px dashed rgba(0,0,0,.22);vertical-align:-2px;background:#fff}.bdico.on{border:1px solid #000}#cpop{position:absolute;z-index:20;background:var(--panel);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.18);padding:8px}#cpop[hidden]{display:none}#cpop .grid{display:grid;grid-template-columns:repeat(5,20px);gap:4px}#cpop .row{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:var(--ink-soft)}#cpop .row input[type=color]{width:28px;height:20px;padding:0;border:1px solid var(--line);border-radius:4px;background:none}.sw{width:20px;height:20px;padding:0;border:1px solid rgba(0,0,0,.22);border-radius:4px;cursor:pointer;background-clip:padding-box}.sw:hover{outline:2px solid var(--accent);outline-offset:1px}#cpop .none{width:100%;background:#fff;position:relative;overflow:hidden;height:22px;margin-bottom:6px;border:1px solid var(--line);border-radius:4px;font-size:12px;color:var(--ink-soft);cursor:pointer}#fapop{position:fixed;z-index:30;background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);font-size:12px;max-width:min(560px,94vw);overflow:hidden}#fapop[hidden]{display:none}#fapop .mono{font-family:ui-monospace,Menlo,Consolas,monospace}#fapop .sig{padding:5px 8px;white-space:normal;word-break:break-word}#fapop .sig b{color:var(--accent);font-weight:600;background:var(--accent-soft);border-radius:3px}#fapop .desc{padding:0 8px 5px;color:var(--ink-soft)}#fapop .foot{border-top:1px solid var(--line);padding:3px 8px;color:var(--ink-soft);font-size:11px}#fapop ul{list-style:none;margin:0;padding:0;max-height:196px;overflow-y:auto}#fapop li{padding:3px 8px;cursor:pointer;display:flex;gap:8px;align-items:baseline;white-space:nowrap}#fapop li.on{background:var(--accent-soft)}#fapop li .nm{font-weight:600}#fapop li .ar{color:var(--ink-soft)}#fapop li .ds{color:var(--ink-soft);overflow:hidden;text-overflow:ellipsis;margin-left:auto;padding-left:12px}button:hover{border-color:var(--accent);color:var(--accent)}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:1px}#toolbar{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-end;padding:6px 10px;background:var(--panel);border-bottom:1px solid var(--line)}#toolbar .grp{display:flex;flex-direction:column;gap:3px;padding-right:10px;margin-right:4px;border-right:1px solid var(--line)}#toolbar .grp:last-child{border-right:0}#toolbar .grp.right{margin-left:auto;padding-right:0;border-right:0}#toolbar .gitems{display:flex;gap:6px;align-items:center}#toolbar .glabel{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);opacity:.75}#appname{align-self:center}#toolbar label{color:var(--ink-soft)}#toolbar input[type=color]{width:26px;height:26px;padding:1px;border:1px solid var(--line);border-radius:6px;background:var(--panel);cursor:pointer}#toolbar input[type=number],#toolbar input[type=text],#toolbar select{border:1px solid var(--line);border-radius:6px;padding:4px 6px;background:var(--panel)}#appname{font-weight:600;letter-spacing:.02em;color:var(--accent);margin-right:6px;padding:2px 4px;border-radius:4px;cursor:text;outline:none}#appname:hover{background:var(--head)}#appname:focus{background:#fff;box-shadow:0 0 0 2px var(--accent)}#fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;background:var(--panel);border-bottom:1px solid var(--line)}#cellname{min-width:64px;text-align:center;border:1px solid var(--line);border-radius:6px;padding:4px;background:var(--head);color:var(--ink-soft)}#finput{flex:1;border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-family:ui-monospace,Menlo,Consolas,monospace}#gridwrap{flex:1;overflow:auto;background:var(--panel)}#gridwrap:focus{outline:none}#gridwrap,#gridwrap *{caret-color:transparent}#editor,#gridwrap input,#gridwrap select{caret-color:auto}table{border-collapse:collapse;table-layout:fixed}th,td{border:1px solid var(--line);padding:0 5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;background:#fff}th{background:var(--head);color:var(--ink-soft);font-weight:500;position:sticky;user-select:none;cursor:pointer}th.hsel{background:var(--sel);color:#fff;cursor:grab}thead th{top:0;z-index:3}tbody th{left:0;z-index:2;text-align:right;padding-right:6px}thead th:first-child{left:0;z-index:4}td{cursor:cell;user-select:none;-webkit-user-select:none;position:relative}td.num{text-align:right}td.sel{outline:2px solid var(--sel);outline-offset:-2px}td.inrange::after{content:"";position:absolute;inset:0;background:var(--sel-fill);pointer-events:none}td.ref{outline:2px dashed var(--ref-c);outline-offset:-2px}td.ref::before{content:"";position:absolute;inset:0;background:var(--ref-f);pointer-events:none}td.ref0{--ref-c:#1a73e8;--ref-f:rgba(26,115,232,.10)}td.ref1{--ref-c:#e8710a;--ref-f:rgba(232,113,10,.10)}td.ref2{--ref-c:#9334e6;--ref-f:rgba(147,52,230,.10)}td.ref3{--ref-c:#188038;--ref-f:rgba(24,128,56,.10)}td.ref4{--ref-c:#c5221f;--ref-f:rgba(197,34,31,.10)}td.clip{outline:2px dashed var(--sel);outline-offset:-2px}td.filling{outline:1px dashed var(--sel);outline-offset:-1px}td.err{color:#b3261e}td .dvmark{float:right;color:var(--ink-soft);font-size:14px;line-height:20px;margin-left:2px;cursor:pointer}#dvpanel,#cfpanel{position:fixed;display:none;z-index:40;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 34px rgba(0,0,0,.22);padding:0;width:min(1040px,96vw);max-height:70vh;display:none;flex-direction:column}#dvpanel:not([hidden]),#cfpanel:not([hidden]){display:flex}#dvhead,#cfhead{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line)}#dvhead b{flex:1;font-size:13px}#cfhead b{flex:1;font-size:13px}#cfhead .hint{font-size:11px;color:var(--ink-soft)}#dvbody,#cfbody{overflow:auto;padding:6px 12px}#dvfoot,#cffoot{display:flex;gap:8px;align-items:center;padding:8px 12px;border-top:1px solid var(--line)}.cfrow{display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--line);flex-wrap:nowrap}.cfrow>*{flex:none}.cfrow .lbl,.cfrow .bad{white-space:nowrap}.cfrow:last-child{border-bottom:0}.cfrow .lbl{font-size:11px;color:var(--ink-soft)}.cfrow input[type=text]{border:1px solid var(--line);border-radius:6px;padding:3px 6px;background:#fff}.cfrow select{border:1px solid var(--line);border-radius:6px;padding:3px 4px;background:#fff}.cfrow .rng{width:110px;font-family:ui-monospace,Menlo,Consolas,monospace}.cfrow .tst{width:64px;font-family:ui-monospace,Menlo,Consolas,monospace;text-align:center}.cfrow .val{width:90px}.cfrow .fmt{width:96px;font-family:ui-monospace,Menlo,Consolas,monospace}.cfrow .prev{width:22px;height:22px;border:1px solid rgba(0,0,0,.22);border-radius:4px;flex:none;font-size:11px;text-align:center;line-height:21px}.cfrow .bad{color:#b3261e;font-size:11px}.cfrow .grow{flex:1 1 auto;min-width:0}.shhead{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);padding:6px 0 2px;border-bottom:1px solid var(--line)}#dvfoot input[type=text]{border:1px solid var(--line);border-radius:6px;padding:3px 6px;background:#fff;width:120px;font-family:ui-monospace,Menlo,Consolas,monospace}#dvfoot .lbl,#cffoot .lbl{font-size:11px;color:var(--ink-soft)}#dvbody .desc{font-family:ui-monospace,Menlo,Consolas,monospace}input[data-pick]:focus{box-shadow:0 0 0 2px var(--accent)}#savetip{position:fixed;display:none;z-index:31;left:50%;transform:translateX(-50%);bottom:18px;background:var(--ink);color:#fff;font-size:12px;padding:6px 12px;border-radius:6px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.3)}#sizetip{position:fixed;display:none;z-index:30;background:var(--ink);color:#fff;font-size:11px;padding:3px 7px;border-radius:4px;pointer-events:none;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.25)}#dropline{position:absolute;display:none;background:var(--accent);z-index:8;pointer-events:none;border-radius:1px}#morerows{margin:6px 0 12px 44px;font-size:12px;color:var(--ink-soft)}#fill{position:absolute;width:8px;height:8px;background:var(--sel);border:1px solid #fff;cursor:crosshair;z-index:5}#editor{position:absolute;z-index:6;border:2px solid var(--sel);padding:0 4px;font:inherit;display:none;background:#fff}select#editor{padding:0}.rsz-c{position:absolute;top:0;right:-10%;width:20%;min-width:6px;height:100%;cursor:col-resize}.rsz-r{position:absolute;left:0;bottom:-10%;height:20%;min-height:6px;width:100%;cursor:row-resize}th{position:sticky}thead th,tbody th{overflow:visible}thead th>div,tbody th>div{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}#tabs{display:flex;gap:2px;align-items:center;padding:4px 10px;background:var(--panel);border-top:1px solid var(--line)}#tabs .tab{padding:4px 12px;border:1px solid var(--line);border-bottom:0;border-radius:6px 6px 0 0;cursor:pointer;color:var(--ink-soft);background:var(--head)}#tabs .tab.on{background:#fff;color:var(--accent);border-color:var(--accent);font-weight:600}#status{margin-left:auto;color:var(--ink-soft)}#status .ver{margin-left:10px;opacity:.45;font-size:11px;font-variant-numeric:tabular-nums}@media (min-width:898px) and (max-width:1729px){#toolbar{align-content:flex-start;row-gap:10px}#toolbar .grp.right{margin-left:0}}@supports(height:100dvh){body{height:100dvh}}#mstrip,#msheet,#mscrim,#mmenu,#movf,#tglbar{display:none}@media (max-width:897px){#toolbar{flex-wrap:nowrap;gap:4px;padding:0 4px;min-height:44px}#toolbar>.grp{display:none}#tglbar,#movf{display:block;flex:none;background:none;border:0;font-size:17px;padding:0 10px;line-height:1}#movf{margin-left:auto}#appname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin:0}#fbar{gap:6px;padding:5px 6px}#cellname{min-width:56px;flex:none}#finput{min-width:0}#tabs{display:none}#morerows{margin-left:10px}#mstrip{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;background:var(--panel);border-bottom:1px solid var(--line);padding:2px 4px}#mstrip::-webkit-scrollbar{display:none}#mstrip button{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:56px;min-height:44px;border:0;background:none;font-size:16px;padding:2px 6px}#mstrip button .lb{font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}#mstrip button:hover{color:inherit}#mscrim{display:block;position:fixed;inset:0;z-index:45;background:rgba(0,0,0,.32)}#msheet{display:flex;flex-direction:column;position:fixed;left:0;right:0;bottom:0;z-index:46;background:var(--panel);border-radius:14px 14px 0 0;box-shadow:0 -6px 26px rgba(0,0,0,.24);max-height:76dvh;padding-bottom:env(safe-area-inset-bottom)}#mscrim[hidden],#msheet[hidden],#mmenu[hidden]{display:none}#mshead{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line)}#mshead b{flex:1;font-size:13px}#mshead button{border:0;background:none;font-size:16px;padding:4px 8px}#msbody{overflow:auto;padding:10px 12px}#msbody .grp{display:flex;border:0;padding:0;margin:0;flex-direction:column;align-items:stretch;gap:8px}#msbody .gitems{flex-wrap:wrap;gap:8px}#msbody .glabel{display:none}#msbody .gitems button{flex:1 1 auto;min-height:44px}#msbody button{min-height:44px}#msbody #tabs .tab,#msbody #tabs button{flex:none}#msbody #tabs{display:flex;flex-wrap:wrap;border:0;padding:0;gap:6px}#msbody #tabs .tab{border-radius:6px;border-bottom:1px solid var(--line);min-height:40px;padding:6px 14px}#msbody #status{margin:0;font-size:0}#msbody #status .ver{font-size:11px;margin:0}#mmenu{display:block;position:fixed;z-index:47;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 26px rgba(0,0,0,.24);padding:4px;min-width:184px}#mmenu button{display:block;width:100%;text-align:left;border:0;background:none;min-height:44px;padding:0 12px}#mmenu button:disabled{opacity:.4}#cpop{position:fixed;left:0!important;right:0;top:auto!important;bottom:0;width:100vw;z-index:47;border-radius:14px 14px 0 0;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}#cpop .grid{grid-template-columns:repeat(8,1fr);gap:6px}#cpop .sw{width:100%;height:38px}#cpop .none{height:38px}#cpop .row{min-height:44px}#dvpanel,#cfpanel{width:100vw;max-width:100vw;left:0!important;right:0;top:auto!important;bottom:0;max-height:62dvh;z-index:47;border-radius:14px 14px 0 0;padding-bottom:env(safe-area-inset-bottom)}#dvhead,#cfhead,#dvfoot,#cffoot{padding:8px}#dvbody,#cfbody{padding:6px 8px}.cfrow{flex-wrap:wrap;gap:6px 8px}#cfhead .hint{display:none}}@media (pointer:coarse){button{padding:6px 10px;min-height:34px}#toolbar select,#toolbar input[type=number]{min-height:34px}#toolbar input[type=color]{width:32px;height:32px}#finput,#editor,#toolbar select,#msbody select,#msbody input{font-size:16px}#gridwrap{-webkit-overflow-scrolling:touch}td,th{user-select:none;-webkit-touch-callout:none}}</style>
+</head>
+<body>
+<div id="toolbar">
+<button id="tglbar" title="Sheets">☰</button>
+<span id="appname" contenteditable="plaintext-only" spellcheck="false" title="Click to rename">Simple xlsx</span>
+<button id="movf" title="More">⋯</button>
+<div class="grp" data-ic="🎨">
+<span class="glabel">Colors</span>
+<div class="gitems">
+<button id="fgBtn" title="Text color">Text <span class="swdot" id="fgDot"></span></button>
+<button id="bgBtn" title="Fill color">Fill <span class="swdot" id="bgDot"></span></button>
+<button id="boldBtn" title="Bold (Ctrl+B) — toggle on the selection" aria-pressed="false"><b>B</b></button>
+<button id="bdOn" title="Fill border — black outline around the selection"><span class="bdico on"></span></button>
+<button id="bdOff" title="Remove border — clear the outline around the selection"><span class="bdico"></span></button>
+</div>
+</div>
+<div class="grp" data-ic="123">
+<span class="glabel">Data type</span>
+<div class="gitems">
+<select id="cellType" title="Cell type"><option value="auto">Auto</option><option value="number">Number</option><option value="text">Text</option><option value="date">Date</option></select>
+<label>Decimals <input type="number" id="decimals" min="0" max="10" style="width:52px" placeholder="—"></label>
+</div>
+</div>
+<div class="grp" data-ic="▦">
+<span class="glabel">Rows &amp; columns</span>
+<div class="gitems">
+<button id="rcBefore" disabled>Insert before</button>
+<button id="rcAfter" disabled>Insert after</button>
+<button id="rcDel" disabled>Delete</button>
+</div>
+</div>
+<div class="grp" data-ic="▾">
+<span class="glabel">Dropdown</span>
+<div class="gitems">
+<button id="dvOpen"><span id="dvCount">0</span> <span id="dvWord">Dropdowns</span></button>
+</div>
+</div>
+<div class="grp" data-ic="✓">
+<span class="glabel">Conditional format</span>
+<div class="gitems">
+<button id="cfOpen"><span id="cfCount">0</span> Rules</button>
+</div>
+</div>
+<div class="grp" data-ic="📋">
+<span class="glabel">Clipboard</span>
+<div class="gitems">
+<button id="pasteAll" disabled title="Paste values, formulas and formatting (Ctrl+V)">Paste</button>
+<button id="pasteVals" disabled title="Paste values only, without formulas (Ctrl+Shift+V)">Paste values</button>
+<button id="pasteFmt" disabled title="Paste formatting only, leaving the destination's contents alone">Paste format</button>
+</div>
+</div>
+<div class="grp right">
+<span class="glabel">File</span>
+<div class="gitems">
+<button id="loadXlsx" title="Open an .xlsx file, replacing what is in this window">Load XLSX</button>
+<button id="saveXlsx" title="Download the whole workbook as an .xlsx file">Save XLSX</button>
+<button id="saveHtml" title="Download this page with the current data embedded. Ctrl+S overwrites the file itself when this page was opened from disk.">Download as HTML</button>
+</div>
+</div>
+</div>
+<div id="mstrip"></div>
+<div id="fbar">
+<div id="cellname">A1</div>
+<input id="finput" spellcheck="false" placeholder="Value or =formula">
+</div>
+<div id="cpop" hidden></div>
+<div id="fapop" hidden></div>
+<div id="sizetip"></div>
+<div id="savetip"></div>
+<div id="cfpanel" hidden></div>
+<div id="dvpanel" hidden></div>
+<input type="file" id="xlsxFile" accept=".xlsx" hidden>
+<div id="cinputs" hidden><input type="color" id="fgColor" value="#37474f"><input type="color" id="bgColor" value="#eceff1"></div>
+<div id="gridwrap" tabindex="-1"><div style="position:relative" id="gridpos"></div></div>
+<input id="editor">
+<div id="tabs"></div>
+<div id="mscrim" hidden></div>
+<div id="msheet" hidden><div id="mshead"><b></b><button id="mshx" title="Close">✕</button></div><div id="msbody"></div></div>
+<div id="mmenu" hidden></div>
+<script id="gfdata" type="application/json"></script>
+<script>
+"use strict";
+const PRISTINE="<!doctype html>\n"+document.documentElement.outerHTML;
+/* ---------- version ---------- */
+const APP_VERSION=document.querySelector('meta[name="app-version"]').content;
+/* ---------- state ---------- */
+let COLS=26, ROWS=100;
+let DEFW=innerWidth<700?64:90;
+const colName=i=>{let s="",n=i+1;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=(n-1-m)/26;}return s;};
+const colIdx=s=>{let n=0;for(const ch of s.toUpperCase())n=n*26+(ch.charCodeAt(0)-64);return n-1;};
+const newSheet=name=>({name,cells:{},colW:{},rowH:{},rules:[]});
+let wb={sheets:[newSheet("Sheet1"),newSheet("Data")],active:0};
+let sel={r:0,c:0}, selEnd=null;
+const $=id=>document.getElementById(id);
+function sheet(){return wb.sheets[wb.active];}
+function addr(c,r){return colName(c)+(r+1);}
+function cell(sh,a){return sh.cells[a];}
+function ensure(sh,a){return sh.cells[a]||(sh.cells[a]={});}
+function sheetByName(n){n=n.toLowerCase();return wb.sheets.find(s=>s.name.toLowerCase()===n);}
+/* ---------- formula engine ---------- */
+const REF=/^(?:([A-Za-z_][A-Za-z0-9_ ]*)!)?(\$?)([A-Z]+)(\$?)(\d+)$/;
+function tokenize(src){
+const t=[];let i=0;
+const isD=c=>c>="0"&&c<="9";
+while(i<src.length){
+const c=src[i];
+if(c===" "){i++;continue;}
+if(isD(c)||(c==="."&&isD(src[i+1]))){let j=i;while(j<src.length&&(isD(src[j])||src[j]==="."))j++;t.push({k:"num",v:parseFloat(src.slice(i,j))});i=j;continue;}
+if(c==='"'){let j=i+1,s="";while(j<src.length&&src[j]!=='"'){s+=src[j++];}t.push({k:"str",v:s});i=j+1;continue;}
+if(/[A-Za-z_$]/.test(c)){
+let j=i;while(j<src.length&&/[A-Za-z0-9_$ ]/.test(src[j]))j++;
+let word=src.slice(i,j).trim();
+if(src[j]==="!"){
+let k=j+1,ref="";while(k<src.length&&/[$A-Za-z0-9]/.test(src[k]))ref+=src[k++];
+t.push({k:"ref",v:word+"!"+ref});i=k;continue;
+}
+if(src[j]==="("){t.push({k:"fn",v:word.toUpperCase()});i=j;continue;}
+if(REF.test(word)&&/\d/.test(word)){t.push({k:"ref",v:word});i=j;continue;}
+if(word.toUpperCase()==="TRUE"){t.push({k:"num",v:true});i=j;continue;}
+if(word.toUpperCase()==="FALSE"){t.push({k:"num",v:false});i=j;continue;}
+t.push({k:"str",v:word});i=j;continue;
+}
+if("<>".includes(c)){
+let op=c;if(src[i+1]==="="||(c==="<"&&src[i+1]===">"))op+=src[++i];
+t.push({k:"op",v:op});i++;continue;
+}
+if("+-*/^&%()=:,;".includes(c)){t.push({k:"op",v:c});i++;continue;}
+throw"char "+c;
+}
+return t;
+}
+function parse(t){
+let p=0;
+const peek=()=>t[p], eat=v=>{if(!t[p]||t[p].v!==v)throw"expected "+v;p++;};
+const op=v=>{const k=t[p];return!!k&&k.k==="op"&&(v?k.v===v:true);};
+function expr(){
+let l=cat();
+if(op()&&["=","<>","<",">","<=",">="].includes(peek().v)){
+const op=t[p++].v;const r=cat();return{k:"cmp",op,l,r};
+}
+return l;
+}
+function cat(){let l=add();while(op("&")){p++;l={k:"cat",l,r:add()};}return l;}
+function add(){let l=mul();while(op("+")||op("-")){const op=t[p++].v;l={k:"bin",op,l,r:mul()};}return l;}
+function mul(){let l=pow();while(op("*")||op("/")){const op=t[p++].v;l={k:"bin",op,l,r:pow()};}return l;}
+function pow(){let l=un();if(op("^")){p++;return{k:"bin",op:"^",l,r:pow()};}return l;}
+function un(){if(op("-")||op("+")){const m=t[p++].v;const e=un();return m==="-"?{k:"neg",e}:e;}return pct();}
+function pct(){let e=atom();while(op("%")){p++;e={k:"pct",e};}return e;}
+function atom(){
+const tk=peek();if(!tk)throw"end";
+if(tk.k==="num"||tk.k==="str"){p++;return{k:"lit",v:tk.v};}
+if(tk.k==="fn"){p++;eat("(");const args=[];if(peek()&&peek().v!==")"){args.push(expr());while(op(",")||op(";")){p++;args.push(expr());}}eat(")");return{k:"call",fn:tk.v,args};}
+if(tk.k==="ref"){p++;
+if(op(":")){p++;const r2=t[p];if(!r2||r2.k!=="ref")throw"range";p++;return{k:"range",a:tk.v,b:r2.v};}
+return{k:"ref",v:tk.v};}
+if(tk.k==="op"&&tk.v==="("){p++;const e=expr();eat(")");return e;}
+throw"unexpected "+tk.v;
+}
+const e=expr();if(p<t.length)throw"trailing";return e;
+}
+function resolveRef(refStr,curSheet){
+const m=refStr.match(REF);if(!m)throw"ref "+refStr;
+const sh=m[1]?sheetByName(m[1]):curSheet;if(!sh)throw"sheet "+m[1];
+return{sh,c:colIdx(m[3]),r:parseInt(m[5])-1};
+}
+const NUM_RE=/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/;
+function isNum(v){
+if(typeof v==="number")return isFinite(v);
+if(typeof v==="boolean")return true;
+return typeof v==="string"&&NUM_RE.test(v.trim());
+}
+function num(v){
+if(v===""||v==null)return 0;
+if(typeof v==="number")return v;
+if(typeof v==="boolean")return v?1:0;
+const t=String(v).trim();
+if(!NUM_RE.test(t))throw E_VAL;
+return parseFloat(t);
+}
+function evalNode(n,sh,vis){
+switch(n.k){
+case"lit":return n.v;
+case"neg":return -num(argVal(n.e,sh,vis));
+case"pct":return num(argVal(n.e,sh,vis))/100;
+case"cat":return txt(argVal(n.l,sh,vis))+txt(argVal(n.r,sh,vis));
+case"bin":{const a=num(argVal(n.l,sh,vis)),b=num(argVal(n.r,sh,vis));
+if(n.op==="+")return a+b;if(n.op==="-")return a-b;if(n.op==="*")return a*b;
+if(n.op==="^"){const x=a**b;if(!isFinite(x))throw E_NUM;return x;}
+if(b===0)throw E_DIV;return a/b;}
+case"cmp":{let a=argVal(n.l,sh,vis),b=argVal(n.r,sh,vis);
+if(typeof a==="string")a=a.toLowerCase();if(typeof b==="string")b=b.toLowerCase();
+if(a===""&&typeof b==="number")a=0;if(b===""&&typeof a==="number")b=0;
+switch(n.op){case"=":return a==b;case"<>":return a!=b;case"<":return a<b;case">":return a>b;case"<=":return a<=b;case">=":return a>=b;}}
+case"ref":{const{sh:s,c,r}=resolveRef(n.v,sh);return getValue(s,addr(c,r),vis);}
+case"range":throw E_VAL;
+case"call":return callFn(n,sh,vis);
+}
+}
+function rangeVals(n,sh,vis){
+const A=resolveRef(n.a,sh),B=resolveRef(n.b,A.sh);
+if(A.sh!==B.sh)throw"cross-sheet range";
+const out=[];
+for(let r=Math.min(A.r,B.r);r<=Math.max(A.r,B.r);r++){const row=[];
+for(let c=Math.min(A.c,B.c);c<=Math.max(A.c,B.c);c++)row.push(getValue(A.sh,addr(c,r),vis));
+out.push(row);}
+return out;
+}
+/* ---------- values, errors, coercion ---------- */
+const E_DIV={err:"#DIV/0!"},E_NA={err:"#N/A"},E_VAL={err:"#VALUE!"},E_NUM={err:"#NUM!"},E_REF={err:"#REF!"};
+function isErr(v){return!!v&&typeof v==="object"&&typeof v.err==="string";}
+function ck(v){if(isErr(v))throw v;return v;}
+function txt(v){
+if(v==null||v==="")return"";
+if(typeof v==="boolean")return v?"TRUE":"FALSE";
+if(typeof v==="number")return String(+v.toFixed(10));
+return String(v);
+}
+function bool(v){
+if(typeof v==="boolean")return v;
+if(typeof v==="string")return v===""?false:(v.toLowerCase()==="false"?false:(v.toLowerCase()==="true"?true:!!num(v)));
+return!!num(v);
+}
+function blank(v){return v===""||v==null;}
+function argVal(a,sh,vis){return ck(evalNode(a,sh,vis));}
+function grid(a,sh,vis){return a.k==="range"?rangeVals(a,sh,vis):[[argVal(a,sh,vis)]];}
+function flat(a,sh,vis){return[].concat(...grid(a,sh,vis));}
+function flatAll(args,sh,vis){const o=[];for(const a of args)o.push(...flat(a,sh,vis));return o;}
+function numsOf(args,sh,vis,from){
+const o=[];
+for(let i=from||0;i<args.length;i++){const a=args[i];
+if(a.k==="range"){for(const v of flat(a,sh,vis)){ck(v);if(!blank(v)&&isNum(v))o.push(num(v));}}
+else{const v=argVal(a,sh,vis);if(!blank(v))o.push(num(v));}}
+return o;
+}
+/* ---------- criteria ("<=5", "apple", "*ltd") shared by SUMIF/COUNTIF/... ---------- */
+function crit(c){
+let op="=",s=c;
+if(typeof c==="string"){const m=/^(<=|>=|<>|=|<|>)([\s\S]*)$/.exec(c.trim());if(m){op=m[1];s=m[2];}}
+const isN=!blank(s)&&isNum(s),sv=isN?num(s):txt(s).toLowerCase();
+const wild=!isN&&/[*?]/.test(sv)&&(op==="="||op==="<>");
+const re=wild?new RegExp("^"+sv.replace(/[.+^${}()|[\]\\]/g,"\\$&").replace(/\*/g,"[\\s\\S]*").replace(/\?/g,"[\\s\\S]")+"$"):null;
+return v=>{
+if(isErr(v))return false;
+if(re)return re.test(txt(v).toLowerCase())===(op==="=");
+if(blank(s))return op==="<>"?!blank(v):blank(v);
+let a,b;
+if(isN){if(blank(v)||!isNum(v))return op==="<>";a=num(v);b=sv;}
+else{if(typeof v==="number")return op==="<>";a=txt(v).toLowerCase();b=sv;}
+switch(op){case"=":return a===b;case"<>":return a!==b;case"<":return a<b;
+case"<=":return a<=b;case">":return a>b;default:return a>=b;}
+};
+}
+function pairsOf(a,sh,vis,from){const p=[];for(let i=from;i+1<a.length;i+=2)p.push([flat(a[i],sh,vis),crit(argVal(a[i+1],sh,vis))]);return p;}
+function hits(p,len){const o=[];for(let i=0;i<len;i++){let ok=p.length>0;for(const[r,m]of p){if(!m(r[i])){ok=false;break;}}if(ok)o.push(i);}return o;}
+/* ---------- dates ---------- */
+function pdate(v){
+if(v instanceof Date)return v;
+const s=txt(v).trim();let m;
+if((m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(s)))return new Date(+m[1],m[2]-1,+m[3]);
+if((m=/^(\d{1,2})\.\s?(\d{1,2})\.\s?(\d{4})/.exec(s)))return new Date(+m[3],m[2]-1,+m[1]);
+if((m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s)))return new Date(+m[3],m[1]-1,+m[2]);
+throw E_VAL;
+}
+const p2=n=>String(n).padStart(2,"0");
+function iso(d){if(isNaN(d))throw E_NUM;return d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());}
+const DAYMS=86400000;
+function dayDiff(a,b){return Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate())-new Date(a.getFullYear(),a.getMonth(),a.getDate()))/DAYMS);}
+function fmtNum(x,f){
+if(/[yd]|mm?m/.test(f)&&/[ymd]/.test(f)){
+const d=pdate(x);
+return f.replace(/yyyy|yy|mmm|mm|m|ddd|dd|d/g,t=>({
+yyyy:d.getFullYear(),yy:p2(d.getFullYear()%100),
+mmm:"JanFebMarAprMayJunJulAugSepOctNovDec".substr(d.getMonth()*3,3),
+mm:p2(d.getMonth()+1),m:d.getMonth()+1,
+ddd:"SunMonTueWedThuFriSat".substr(d.getDay()*3,3),
+dd:p2(d.getDate()),d:d.getDate()}[t]));
+}
+let v=num(x),suf="";
+if(/%/.test(f)){v*=100;suf="%";}
+const dot=f.indexOf("."),dec=dot<0?0:(f.slice(dot+1).match(/[0#]/g)||[]).length;
+let s=Math.abs(v).toFixed(dec);
+if(/,/.test(f)){const[i,d]=s.split(".");s=i.replace(/\B(?=(\d{3})+(?!\d))/g,",")+(d?"."+d:"");}
+return(v<0?"-":"")+s+suf;
+}
+/* ---------- built-in functions ---------- */
+const FNS={
+SUM:E=>E.nums().reduce((a,b)=>a+b,0),
+PRODUCT:E=>{const n=E.nums();return n.length?n.reduce((a,b)=>a*b,1):0;},
+SUMPRODUCT:E=>{const gs=E.a.map((_,i)=>E.flat(i));let s=0;
+for(let i=0;i<gs[0].length;i++){let p=1;for(const g of gs){const v=g[i];ck(v);p*=(blank(v)||!isNum(v))?0:num(v);}s+=p;}return s;},
+ABS:E=>Math.abs(E.n(0)),SIGN:E=>Math.sign(E.n(0)),
+INT:E=>Math.floor(E.n(0)),
+TRUNC:E=>{const f=10**E.n(1,0);return Math.trunc(E.n(0)*f)/f;},
+ROUND:E=>{const f=10**E.n(1,0);return Math.sign(E.n(0))*Math.round((Math.abs(E.n(0))+Number.EPSILON)*f)/f;},
+ROUNDUP:E=>{const f=10**E.n(1,0);return Math.sign(E.n(0))*Math.ceil(Math.abs(E.n(0))*f-1e-9)/f;},
+ROUNDDOWN:E=>{const f=10**E.n(1,0);return Math.sign(E.n(0))*Math.floor(Math.abs(E.n(0))*f+1e-9)/f;},
+CEILING:E=>{const s=E.n(1,1);return s?Math.ceil(E.n(0)/s)*s:0;},
+FLOOR:E=>{const s=E.n(1,1);return s?Math.floor(E.n(0)/s)*s:0;},
+MOD:E=>{const b=E.n(1);if(!b)throw E_DIV;return E.n(0)-b*Math.floor(E.n(0)/b);},
+POWER:E=>E.n(0)**E.n(1),
+SQRT:E=>{const x=E.n(0);if(x<0)throw E_NUM;return Math.sqrt(x);},
+EXP:E=>Math.exp(E.n(0)),
+LN:E=>{const x=E.n(0);if(x<=0)throw E_NUM;return Math.log(x);},
+LOG:E=>Math.log(E.n(0))/Math.log(E.n(1,10)),
+PI:()=>Math.PI,
+AVERAGE:E=>{const n=E.nums();if(!n.length)throw E_DIV;return n.reduce((a,b)=>a+b,0)/n.length;},
+MEDIAN:E=>{const n=E.nums().sort((a,b)=>a-b);if(!n.length)throw E_NUM;
+const h=n.length>>1;return n.length%2?n[h]:(n[h-1]+n[h])/2;},
+MIN:E=>{const n=E.nums();return n.length?Math.min(...n):0;},
+MAX:E=>{const n=E.nums();return n.length?Math.max(...n):0;},
+COUNT:E=>E.nums().length,
+COUNTA:E=>E.all().filter(v=>!blank(v)).length,
+COUNTBLANK:E=>E.all().filter(blank).length,
+LARGE:E=>{const n=E.flat(0).filter(v=>!blank(v)&&isNum(ck(v))).map(num).sort((a,b)=>b-a),k=E.n(1);
+if(k<1||k>n.length)throw E_NUM;return n[k-1];},
+SMALL:E=>{const n=E.flat(0).filter(v=>!blank(v)&&isNum(ck(v))).map(num).sort((a,b)=>a-b),k=E.n(1);
+if(k<1||k>n.length)throw E_NUM;return n[k-1];},
+STDEV:E=>stdev(E.nums(),1),"STDEV.S":E=>stdev(E.nums(),1),
+STDEVP:E=>stdev(E.nums(),0),"STDEV.P":E=>stdev(E.nums(),0),
+IF:E=>{const c=E.v(0);return(typeof c==="string"?c!=="":bool(c))?E.v(1):(E.a[2]!==undefined?E.v(2):false);},
+IFS:E=>{for(let i=0;i+1<E.a.length;i+=2)if(bool(E.v(i)))return E.v(i+1);throw E_NA;},
+SWITCH:E=>{const k=txt(E.v(0)).toLowerCase();
+for(let i=1;i+1<E.a.length;i+=2)if(txt(E.v(i)).toLowerCase()===k)return E.v(i+1);
+return E.a.length%2===0?E.v(E.a.length-1):(()=>{throw E_NA;})();},
+IFERROR:E=>{try{const v=E.raw(0);return isErr(v)?E.v(1):v;}catch(e){return E.v(1);}},
+IFNA:E=>{try{const v=E.raw(0);return isErr(v)&&v.err==="#N/A"?E.v(1):ck(v);}
+catch(e){if(isErr(e)&&e.err==="#N/A")return E.v(1);throw e;}},
+AND:E=>E.all().every(v=>blank(v)?true:bool(ck(v))),
+OR:E=>E.all().some(v=>blank(v)?false:bool(ck(v))),
+NOT:E=>!bool(E.v(0)),
+TRUE:()=>true,FALSE:()=>false,NA:()=>{throw E_NA;},
+SUMIF:E=>condAgg(E,"sum",1,E.a[2]?2:0),
+SUMIFS:E=>condAgg(E,"sum",1,0,true),
+AVERAGEIF:E=>condAgg(E,"avg",1,E.a[2]?2:0),
+AVERAGEIFS:E=>condAgg(E,"avg",1,0,true),
+MAXIFS:E=>condAgg(E,"max",1,0,true),
+MINIFS:E=>condAgg(E,"min",1,0,true),
+COUNTIF:E=>hits(pairsOf(E.a,E.sh,E.vis,0),E.flat(0).length).length,
+COUNTIFS:E=>hits(pairsOf(E.a,E.sh,E.vis,0),E.flat(0).length).length,
+VLOOKUP:E=>lookup2d(E,false),
+HLOOKUP:E=>lookup2d(E,true),
+MATCH:E=>{const arr=E.flat(1),k=E.v(0),t=E.n(2,1);
+if(!t){const i=arr.findIndex(v=>same(v,k));if(i<0)throw E_NA;return i+1;}
+let best=-1;
+for(let i=0;i<arr.length;i++){const v=arr[i];if(blank(v))continue;
+const d=cmpv(v,k);if(t>0?d<=0:d>=0)best=i;else if(t>0?d>0:d<0)break;}
+if(best<0)throw E_NA;return best+1;},
+INDEX:E=>{const g=E.grid(0),r=E.n(1,1);
+let ri=r,ci=E.n(2,g.length===1&&E.a[2]===undefined?0:1);
+if(g.length===1&&E.a[2]===undefined){ri=1;ci=r;}
+else if(g[0].length===1&&E.a[2]===undefined)ci=1;
+if(ri<1||ri>g.length||ci<1||ci>g[0].length)throw E_REF;
+return ck(g[ri-1][ci-1]);},
+XLOOKUP:E=>{const k=E.v(0),lk=E.flat(1),rv=E.flat(2);
+const i=lk.findIndex(v=>same(v,k));
+if(i<0||i>=rv.length){if(E.a[3]!==undefined)return E.v(3);throw E_NA;}
+return ck(rv[i]);},
+CHOOSE:E=>{const i=E.n(0);if(i<1||i>=E.a.length)throw E_VAL;return E.v(i);},
+ROW:E=>refOf(E,0).r+1,
+COLUMN:E=>refOf(E,0).c+1,
+ROWS:E=>E.grid(0).length,
+COLUMNS:E=>E.grid(0)[0].length,
+CONCAT:E=>E.all().map(txt).join(""),
+CONCATENATE:E=>E.all().map(txt).join(""),
+TEXTJOIN:E=>{const d=E.s(0,""),skip=E.b(1,true);
+return flatAll(E.a.slice(2),E.sh,E.vis).filter(v=>!(skip&&blank(v))).map(txt).join(d);},
+LEFT:E=>E.s(0).slice(0,Math.max(0,E.n(1,1))),
+RIGHT:E=>{const n=Math.max(0,E.n(1,1));return n?E.s(0).slice(-n):"";},
+MID:E=>{const st=E.n(1);if(st<1)throw E_VAL;return E.s(0).substr(st-1,Math.max(0,E.n(2)));},
+LEN:E=>E.s(0).length,
+TRIM:E=>E.s(0).replace(/\s+/g," ").trim(),
+UPPER:E=>E.s(0).toUpperCase(),
+LOWER:E=>E.s(0).toLowerCase(),
+PROPER:E=>E.s(0).toLowerCase().replace(/(^|[^A-Za-zÀ-ɏ])([a-zà-ɏ])/g,(m,a,b)=>a+b.toUpperCase()),
+SUBSTITUTE:E=>{const s=E.s(0),f=E.s(1),r=E.s(2);if(f==="")return s;
+if(E.a[3]===undefined)return s.split(f).join(r);
+let n=E.n(3),i=-1;while(n-->0){i=s.indexOf(f,i+1);if(i<0)return s;}
+return s.slice(0,i)+r+s.slice(i+f.length);},
+REPLACE:E=>{const s=E.s(0),st=E.n(1);return s.slice(0,st-1)+E.s(3)+s.slice(st-1+E.n(2));},
+FIND:E=>{const i=E.s(1).indexOf(E.s(0),E.n(2,1)-1);if(i<0)throw E_VAL;return i+1;},
+SEARCH:E=>{const i=E.s(1).toLowerCase().indexOf(E.s(0).toLowerCase(),E.n(2,1)-1);if(i<0)throw E_VAL;return i+1;},
+REPT:E=>E.s(0).repeat(Math.max(0,Math.trunc(E.n(1)))),
+EXACT:E=>E.s(0)===E.s(1),
+VALUE:E=>num(E.s(0).replace(/[\s ]/g,"").replace(/,(?=\d{3}\b)/g,"")),
+TEXT:E=>fmtNum(E.v(0),E.s(1)),
+ISBLANK:E=>blank(E.raw(0)),
+ISNUMBER:E=>{const v=E.raw(0);return!isErr(v)&&!blank(v)&&isNum(v)&&typeof v!=="boolean";},
+ISTEXT:E=>{const v=E.raw(0);return typeof v==="string"&&v!==""&&!isNum(v);},
+ISERROR:E=>{try{return isErr(E.raw(0));}catch(e){return true;}},
+ISNA:E=>{try{const v=E.raw(0);return isErr(v)&&v.err==="#N/A";}catch(e){return isErr(e)&&e.err==="#N/A";}},
+TODAY:()=>iso(new Date()),
+NOW:()=>{const d=new Date();return iso(d)+" "+p2(d.getHours())+":"+p2(d.getMinutes());},
+DATE:E=>iso(new Date(E.n(0),E.n(1)-1,E.n(2))),
+YEAR:E=>pdate(E.v(0)).getFullYear(),
+MONTH:E=>pdate(E.v(0)).getMonth()+1,
+DAY:E=>pdate(E.v(0)).getDate(),
+WEEKDAY:E=>{const d=pdate(E.v(0)).getDay(),t=E.n(1,1);return t===2?(d===0?7:d):(t===3?(d+6)%7:d+1);},
+DAYS:E=>dayDiff(pdate(E.v(1)),pdate(E.v(0))),
+EDATE:E=>{const d=pdate(E.v(0)),m=E.n(1),t=new Date(d.getFullYear(),d.getMonth()+m,1);
+return iso(new Date(t.getFullYear(),t.getMonth(),Math.min(d.getDate(),mdays(t))));},
+EOMONTH:E=>{const d=pdate(E.v(0)),t=new Date(d.getFullYear(),d.getMonth()+E.n(1)+1,0);return iso(t);},
+DATEDIF:E=>{const a=pdate(E.v(0)),b=pdate(E.v(1)),u=E.s(2).toUpperCase();
+if(u==="D")return dayDiff(a,b);
+let m=(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth();
+if(b.getDate()<a.getDate())m--;
+if(u==="M")return m;if(u==="Y")return Math.trunc(m/12);
+if(u==="MD")return b.getDate()-a.getDate();throw E_NUM;},
+NETWORKDAYS:E=>{let a=pdate(E.v(0)),b=pdate(E.v(1)),sgn=1;
+if(a>b){const t=a;a=b;b=t;sgn=-1;}
+const hol=new Set(E.a[2]?E.flat(2).filter(v=>!blank(v)).map(v=>iso(pdate(v))):[]);
+const n=dayDiff(a,b);if(n>20000)throw E_NUM;
+let c=0;for(let i=0;i<=n;i++){const d=new Date(a.getFullYear(),a.getMonth(),a.getDate()+i);
+if(d.getDay()%6&&!hol.has(iso(d)))c++;}
+return sgn*c;},
+PMT:E=>pmt(E.n(0),E.n(1),E.n(2),E.n(3,0),E.n(4,0)),
+FV:E=>{const r=E.n(0),n=E.n(1),p=E.n(2),pv=E.n(3,0),t=E.n(4,0);
+return r?-(pv*(1+r)**n+p*(1+r*t)*((1+r)**n-1)/r):-(pv+p*n);},
+PV:E=>{const r=E.n(0),n=E.n(1),p=E.n(2),fv=E.n(3,0),t=E.n(4,0);
+return r?-(fv+p*(1+r*t)*((1+r)**n-1)/r)/(1+r)**n:-(fv+p*n);},
+NPV:E=>{const r=E.n(0);let s=0,i=0;
+for(const v of flatAll(E.a.slice(1),E.sh,E.vis)){ck(v);if(blank(v)||!isNum(v))continue;s+=num(v)/(1+r)**++i;}
+return s;},
+};
+const FNSIG=`SUM|number…|Adds up numbers
+PRODUCT|number…|Multiplies numbers together
+SUMPRODUCT|array…|Multiplies arrays element-wise, then sums
+ABS|number|Absolute value
+SIGN|number|-1, 0 or 1 depending on the sign
+INT|number|Rounds down to a whole number
+TRUNC|number,[digits]|Cuts off decimals without rounding
+ROUND|number,[digits]|Rounds to the given number of decimals
+ROUNDUP|number,[digits]|Rounds away from zero
+ROUNDDOWN|number,[digits]|Rounds towards zero
+CEILING|number,[significance]|Rounds up to a multiple
+FLOOR|number,[significance]|Rounds down to a multiple
+MOD|number,divisor|Remainder after division
+POWER|number,power|Raises a number to a power
+SQRT|number|Square root
+EXP|number|e raised to a power
+LN|number|Natural logarithm
+LOG|number,[base]|Logarithm, base 10 unless given
+PI||The constant 3.14159…
+AVERAGE|number…|Mean of the numbers
+MEDIAN|number…|Middle value
+MIN|number…|Smallest number
+MAX|number…|Largest number
+COUNT|value…|How many entries are numbers
+COUNTA|value…|How many entries are not empty
+COUNTBLANK|value…|How many entries are empty
+LARGE|range,k|The k-th largest value
+SMALL|range,k|The k-th smallest value
+STDEV|number…|Standard deviation of a sample
+STDEV.S|number…|Standard deviation of a sample
+STDEVP|number…|Standard deviation of a whole population
+STDEV.P|number…|Standard deviation of a whole population
+IF|test,then,[else]|One value if the test is true, another if not
+IFS|test1,value1,…|First value whose test is true
+SWITCH|expression,case1,value1,…,[default]|Matches an expression against cases
+IFERROR|value,fallback|The fallback if the value is an error
+IFNA|value,fallback|The fallback if the value is #N/A
+AND|logical…|True when every argument is true
+OR|logical…|True when any argument is true
+NOT|logical|Flips true and false
+TRUE||The value TRUE
+FALSE||The value FALSE
+NA||The error #N/A
+SUMIF|range,criteria,[sum_range]|Sums the rows matching a criterion
+SUMIFS|sum_range,range1,criteria1,…|Sums the rows matching every criterion
+AVERAGEIF|range,criteria,[average_range]|Averages the rows matching a criterion
+AVERAGEIFS|average_range,range1,criteria1,…|Averages the rows matching every criterion
+MAXIFS|max_range,range1,criteria1,…|Largest value among matching rows
+MINIFS|min_range,range1,criteria1,…|Smallest value among matching rows
+COUNTIF|range,criteria|Counts the cells matching a criterion
+COUNTIFS|range1,criteria1,…|Counts the rows matching every criterion
+VLOOKUP|lookup,table,column,[approximate]|Finds a row by its first column
+HLOOKUP|lookup,table,row,[approximate]|Finds a column by its first row
+MATCH|lookup,range,[type]|Position of a value in a range
+INDEX|range,row,[column]|The value at a position in a range
+XLOOKUP|lookup,lookup_range,result_range,[if_missing]|Looks up a value in one range, returns from another
+CHOOSE|index,value1,…|Picks the n-th of the listed values
+ROW|[ref]|Row number of a reference
+COLUMN|[ref]|Column number of a reference
+ROWS|range|How many rows a range has
+COLUMNS|range|How many columns a range has
+CONCAT|text…|Joins text end to end
+CONCATENATE|text…|Joins text end to end
+TEXTJOIN|delimiter,ignore_empty,text…|Joins text with a separator between
+LEFT|text,[count]|First characters of the text
+RIGHT|text,[count]|Last characters of the text
+MID|text,start,count|Characters from the middle, counting from 1
+LEN|text|How many characters
+TRIM|text|Removes extra spaces
+UPPER|text|UPPERCASE
+LOWER|text|lowercase
+PROPER|text|Capitalises Each Word
+SUBSTITUTE|text,find,replace,[occurrence]|Replaces text by content
+REPLACE|text,start,count,new_text|Replaces text by position
+FIND|find,text,[start]|Position of text, case-sensitive
+SEARCH|find,text,[start]|Position of text, ignoring case
+REPT|text,times|Repeats text
+EXACT|text1,text2|True if identical, case included
+VALUE|text|Turns text into a number
+TEXT|value,format|Formats a value as text
+ISBLANK|value|True if the cell is empty
+ISNUMBER|value|True if the value is a number
+ISTEXT|value|True if the value is text
+ISERROR|value|True if the value is any error
+ISNA|value|True if the value is #N/A
+TODAY||Today's date
+NOW||Date and time right now
+DATE|year,month,day|Builds a date
+YEAR|date|Year of a date
+MONTH|date|Month of a date, 1-12
+DAY|date|Day of the month
+WEEKDAY|date,[type]|Day of the week as a number
+DAYS|end_date,start_date|Days between two dates
+EDATE|date,months|Shifts a date by whole months
+EOMONTH|date,months|Last day of the month, months away
+DATEDIF|start,end,unit|Difference in "D", "M", "Y" or "MD"
+NETWORKDAYS|start,end,[holidays]|Working days between two dates
+PMT|rate,nper,pv,[fv],[type]|Payment per period on a loan
+FV|rate,nper,pmt,[pv],[type]|Future value of an investment
+PV|rate,nper,pmt,[fv],[type]|Present value of an investment
+NPV|rate,value…|Net present value of a cash flow`;
+const SIG=new Map(FNSIG.split("\n").map(l=>{const[n,a,d]=l.split("|");return[n,{p:a?a.split(","):[],d}];}));
+function mdays(d){return new Date(d.getFullYear(),d.getMonth()+1,0).getDate();}
+function stdev(n,ddof){if(n.length<=ddof)throw E_DIV;
+const m=n.reduce((a,b)=>a+b,0)/n.length;
+return Math.sqrt(n.reduce((s,x)=>s+(x-m)**2,0)/(n.length-ddof));}
+function pmt(r,n,pv,fv,t){return r?-(pv*(1+r)**n+fv)*r/((1+r*t)*((1+r)**n-1)):-(pv+fv)/n;}
+function condAgg(E,kind,critFrom,targetIdx,targetFirst){
+const a=E.a,pairs=pairsOf(a,E.sh,E.vis,targetFirst?1:critFrom-1);
+const tgt=E.flat(targetFirst?0:targetIdx);
+const probe=E.flat(targetFirst?1:0);
+const n=[];
+for(const i of hits(pairs,probe.length)){const v=tgt[i];ck(v);if(!blank(v)&&isNum(v))n.push(num(v));}
+if(kind==="sum")return n.reduce((x,y)=>x+y,0);
+if(!n.length)throw kind==="avg"?E_DIV:E_NUM;
+if(kind==="avg")return n.reduce((x,y)=>x+y,0)/n.length;
+return kind==="max"?Math.max(...n):Math.min(...n);
+}
+function key(v){return typeof v==="string"?(isNum(v)?num(v):v.toLowerCase()):(typeof v==="boolean"?+v:v);}
+function same(a,b){return key(a)===key(b);}
+function cmpv(a,b){const x=key(a),y=key(b);return x<y?-1:x>y?1:0;}
+function lookup2d(E,horiz){
+const k=E.v(0),g=E.grid(1),idx=E.n(2),approx=E.b(3,false);
+const line=horiz?g[0]:g.map(r=>r[0]);
+let at=-1;
+if(approx){for(let i=0;i<line.length;i++){const v=line[i];if(blank(v))continue;
+if(cmpv(v,k)<=0)at=i;else break;}}
+else at=line.findIndex(v=>same(v,k));
+if(at<0)throw E_NA;
+const row=horiz?g[idx-1]:g[at];
+if(!row)throw E_REF;
+const cell=horiz?row[at]:row[idx-1];
+if(idx<1||cell===undefined)throw E_REF;
+return ck(cell);
+}
+function refOf(E,i){
+const a=E.a[i];
+if(a===undefined){if(!CURCELL)throw E_REF;return CURCELL;}
+if(a.k==="ref")return resolveRef(a.v,E.sh);
+if(a.k==="range")return resolveRef(a.a,E.sh);
+throw E_REF;
+}
+function callFn(n,sh,vis){
+const f=FNS[n.fn];
+if(!f)throw{err:"#NAME?"};
+const a=n.args;
+const E={a,sh,vis,
+raw:i=>evalNode(a[i],sh,vis),
+v:i=>argVal(a[i],sh,vis),
+n:(i,d)=>a[i]===undefined?d:num(argVal(a[i],sh,vis)),
+s:(i,d)=>a[i]===undefined?(d===undefined?"":d):txt(argVal(a[i],sh,vis)),
+b:(i,d)=>a[i]===undefined?d:bool(argVal(a[i],sh,vis)),
+grid:i=>grid(a[i],sh,vis),
+flat:i=>flat(a[i],sh,vis),
+all:()=>flatAll(a,sh,vis),
+nums:()=>numsOf(a,sh,vis,0)};
+return f(E);
+}
+let CURCELL=null;
+function addrPos(sh,a){const m=REF.exec(a);return{sh,c:colIdx(m[3]),r:parseInt(m[5])-1};}
+const evalCache=new Map();
+function getValue(sh,a,vis){
+const key=sh.name+"!"+a;
+if(evalCache.has(key))return evalCache.get(key);
+const c=cell(sh,a);
+let v="";
+if(c&&c.v!=null&&c.v!==""){
+const raw=String(c.v);
+if(raw[0]==="="){
+if(vis.has(key))throw"circular";
+vis.add(key);
+const prev=CURCELL;CURCELL=addrPos(sh,a);
+try{v=evalNode(parse(tokenize(raw.slice(1))),sh,vis);}
+catch(e){v=isErr(e)?e:{err:String(e)};}
+CURCELL=prev;vis.delete(key);
+}else{
+const t=c.f&&c.f.type;
+if(t==="text")v=raw;
+else if(t==="date")v=raw;
+else{v=isNum(raw)&&raw.trim()!==""?parseFloat(raw.trim()):raw;}
+}
+}
+evalCache.set(key,v);return v;
+}
+function displayValue(sh,a,fOverride){
+const v=getValue(sh,a,new Set());
+const c=fOverride?{f:fOverride}:cell(sh,a);
+if(isErr(v))return{text:v.err[0]==="#"?v.err:"#ERR",err:true,title:v.err};
+if(typeof v==="boolean")return{text:v?"TRUE":"FALSE"};
+if(typeof v==="number"){
+const d=c&&c.f&&c.f.dec!=null?c.f.dec:null;
+return{text:d==null?String(+v.toFixed(10)):v.toFixed(d),num:true};
+}
+return{text:String(v)};
+}
+/* ---------- reference shifting for fill/drag ---------- */
+function shiftFormula(src,dc,dr){
+return src.replace(/(?:([A-Za-z_][A-Za-z0-9_ ]*)!)?(\$?)([A-Z]+)(\$?)(\d+)/g,(m,shn,dl,col,dlr,row,off,whole)=>{
+let c=colIdx(col),r=parseInt(row)-1;
+if(!dl)c+=dc;if(!dlr)r+=dr;
+if(c<0||r<0)return"#REF";
+return(shn?shn+"!":"")+dl+colName(c)+dlr+(r+1);
+});
+}
+/* ---------- rendering ---------- */
+const gridpos=$("gridpos");
+let table,fillHandle;
+function buildGrid(){
+if(editing)cancelEdit();
+else hideEditor();
+gridpos.innerHTML="";
+table=document.createElement("table");
+const sh=sheet();
+const thead=document.createElement("thead");
+let hr="<tr style='height:22px'><th style='width:44px'><div></div></th>";
+for(let c=0;c<COLS;c++)hr+=`<th data-c="${c}" style="width:${sh.colW[c]||DEFW}px"><div>${colName(c)}<span class="rsz-c" data-c="${c}"></span></div></th>`;
+thead.innerHTML=hr+"</tr>";
+const tbody=document.createElement("tbody");
+let html="";
+for(let r=0;r<ROWS;r++){
+html+=`<tr style="height:${sh.rowH[r]||22}px"><th data-r="${r}"><div>${r+1}<span class="rsz-r" data-r="${r}"></span></div></th>`;
+for(let c=0;c<COLS;c++)html+=`<td data-c="${c}" data-r="${r}"></td>`;
+html+="</tr>";
+}
+tbody.innerHTML=html;
+table.append(thead,tbody);
+gridpos.appendChild(table);
+sizeTable();
+fillHandle=document.createElement("div");fillHandle.id="fill";fillHandle.style.display="none";
+fillHandle.addEventListener("mousedown",fillHandleDown);
+gridpos.appendChild(fillHandle);
+const more=document.createElement("button");
+more.id="morerows";more.textContent="+100 rows";more.title="Extend the grid";
+more.onclick=()=>{ROWS+=100;buildGrid();};
+gridpos.appendChild(more);
+paintAll();
+}
+function sizeTable(){
+const sh=sheet();
+let w=44;
+for(let c=0;c<COLS;c++)w+=sh.colW[c]||DEFW;
+table.style.width=w+"px";
+}
+function paintAll(){
+evalCache.clear();cfReset();
+const sh=sheet();
+for(const td of table.tBodies[0].querySelectorAll("td"))paintCell(td,sh);
+paintSelection();paintClip();
+}
+/* ---------- conditional formatting ---------- */
+const CF_OPS=[["==","= equals"],["!=","≠ not equal"],[">","> greater"],[">=","≥ at least"],
+["<","< less"],["<=","≤ at most"],["between","between"],["in","is in range"]];
+const cfCache={byCol:null,sets:new Map(),fmts:new Map(),tests:new Map()};
+function cfReset(){cfCache.byCol=null;cfCache.sets.clear();cfCache.fmts.clear();cfCache.tests.clear();}
+function cfTestRef(sh,test){
+if(cfCache.tests.has(test))return cfCache.tests.get(test);
+let out=null;
+const t=(test||"").trim();
+if(t){
+const m=t.match(/^(?:([A-Za-z_][A-Za-z0-9_ ]*)!)?\$?([A-Za-z]+)\$?(\d+)?$/);
+if(m){
+const tsh=m[1]?sheetByName(m[1].trim()):sh;
+if(tsh)out=m[3]?{sh:tsh,c:colIdx(m[2]),r:+m[3]-1}:{sh:tsh,c:colIdx(m[2])};
+}
+}
+cfCache.tests.set(test,out);
+return out;
+}
+function cfBounds(sh,ref){
+try{
+const n=parse(tokenize(ref));
+if(n.k==="ref"){const t=resolveRef(n.a||ref,sh);return{sh:t.sh,c1:t.c,c2:t.c,r1:t.r,r2:t.r};}
+if(n.k!=="range")return null;
+const A=resolveRef(n.a,sh),B=resolveRef(n.b,A.sh);
+if(A.sh!==B.sh)return null;
+return{sh:A.sh,c1:Math.min(A.c,B.c),c2:Math.max(A.c,B.c),r1:Math.min(A.r,B.r),r2:Math.max(A.r,B.r)};
+}catch(e){return null;}
+}
+function cfRules(sh){
+if(!cfCache.byCol){
+cfCache.byCol=new Map();
+(sh.rules||[]).forEach((r,i)=>{
+const b=cfBounds(sh,r.range||"");
+if(!b||b.sh!==sh)return;
+for(let c=b.c1;c<=b.c2;c++){
+if(!cfCache.byCol.has(c))cfCache.byCol.set(c,[]);
+cfCache.byCol.get(c).push({...r,i,b});
+}
+});
+}
+return cfCache.byCol;
+}
+function cfSet(sh,rule){
+if(cfCache.sets.has(rule.i))return cfCache.sets.get(rule.i);
+let set=null;
+const b=cfBounds(sh,rule.v1||"");
+if(b){
+set=new Set();
+for(let r=b.r1;r<=b.r2;r++)for(let c=b.c1;c<=b.c2;c++){
+const v=getValue(b.sh,addr(c,r),new Set());
+if(v!==""&&v!=null&&typeof v!=="object")set.add(cfKey(v));
+}
+}
+cfCache.sets.set(rule.i,set);
+return set;
+}
+function cfFmt(sh,ref){
+if(cfCache.fmts.has(ref))return cfCache.fmts.get(ref);
+let f=null;
+try{
+const t=resolveRef(ref,sh),c=cell(t.sh,addr(t.c,t.r));
+f=c&&c.f?c.f:null;
+}catch(e){f=null;}
+cfCache.fmts.set(ref,f);
+return f;
+}
+function cfKey(v){
+if(typeof v==="boolean")return v?"TRUE":"FALSE";
+if(typeof v==="number")return "n:"+v;
+const t=String(v);
+return isNum(t)&&t.trim()!==""?"n:"+num(t):"s:"+t.trim().toLowerCase();
+}
+const cfIsNum=v=>typeof v==="number"||(typeof v==="string"&&v.trim()!==""&&isNum(v));
+function cfCmp(a,b){
+const na=cfIsNum(a),nb=cfIsNum(b);
+if(na!==nb)return null;
+if(na)return num(a)-num(b);
+const x=String(a).trim().toLowerCase(),y=String(b).trim().toLowerCase();
+return x<y?-1:x>y?1:0;
+}
+function cfTest(op,v,bound){
+const d=cfCmp(v,bound);
+if(d===null)return false;
+switch(op){
+case ">":return d>0;
+case ">=":return d>=0;
+case "<":return d<0;
+case "<=":return d<=0;
+}
+return false;
+}
+function cfMatch(sh,a,rule,row){
+let src=a,ssh=sh;
+if(rule.test&&rule.test.trim()){
+const t=cfTestRef(sh,rule.test);
+if(!t)return false;
+ssh=t.sh;src=addr(t.c,t.r!=null?t.r:row);
+}
+let v;
+try{v=getValue(ssh,src,new Set());}catch(e){return false;}
+if(v===""||v==null||typeof v==="object")return false;
+switch(rule.op){
+case "in":{const set=cfSet(sh,rule);return!!set&&set.has(cfKey(v));}
+case "!=":return cfKey(v)!==cfKey(rule.v1);
+case "between":
+return cfTest(rule.lo||">",v,rule.v1)&&cfTest(rule.hi||"<=",v,rule.v2);
+case ">":case ">=":case "<":case "<=":return cfTest(rule.op,v,rule.v1);
+default:return cfKey(v)===cfKey(rule.v1);
+}
+}
+function cfVisual(f){
+const out={};
+if(f.color!=null)out.color=f.color;
+if(f.bold!=null)out.bold=f.bold;
+if(f.bg!=null)out.bg=f.bg;
+if(f.dec!=null)out.dec=f.dec;
+return out;
+}
+function effFmt(sh,a,c,col,row){
+const own=c&&c.f||null;
+const rules=cfRules(sh).get(col);
+if(!rules||!rules.length)return own;
+for(const rule of rules){
+if(row<rule.b.r1||row>rule.b.r2)continue;
+if(!cfMatch(sh,a,rule,row))continue;
+const f=cfFmt(sh,rule.fmt);
+if(!f)continue;
+return own?{...own,...cfVisual(f)}:cfVisual(f);
+}
+return own;
+}
+function paintCell(td,sh){
+const col=+td.dataset.c,row=+td.dataset.r;
+const a=addr(col,row);
+const c=cell(sh,a);
+const f=effFmt(sh,a,c,col,row);
+const d=displayValue(sh,a,f);
+td.textContent=d.text;
+td.className=(d.num?"num":"")+(d.err?" err":"");
+td.title=d.title||"";
+td.style.color=f&&f.color||"";
+td.style.fontWeight=f&&f.bold?"700":"";
+td.style.background=f&&f.bg||"";
+paintBorders(td,(c&&c.f&&c.f.b)|0);
+if(c&&c.f&&c.f.dv){const s=document.createElement("span");s.className="dvmark";s.textContent="▾";td.appendChild(s);}
+}
+function tdAt(c,r){return table.tBodies[0].rows[r].cells[c+1];}
+function paintHeaders(){
+if(!table)return;
+for(const th of table.querySelectorAll("th.hsel"))th.classList.remove("hsel");
+const en=selEnd||sel;
+const c1=Math.min(sel.c,en.c),c2=Math.max(sel.c,en.c),r1=Math.min(sel.r,en.r),r2=Math.max(sel.r,en.r);
+if(r1===0&&r2===ROWS-1)
+for(let c=c1;c<=c2;c++)table.tHead.rows[0].cells[c+1].classList.add("hsel");
+if(c1===0&&c2===COLS-1)
+for(let r=r1;r<=r2;r++)table.tBodies[0].rows[r].cells[0].classList.add("hsel");
+}
+function paintSelection(){
+for(const td of table.querySelectorAll("td.sel,td.inrange"))td.classList.remove("sel","inrange");
+const e=selEnd||sel;
+for(let r=Math.min(sel.r,e.r);r<=Math.max(sel.r,e.r);r++)
+for(let c=Math.min(sel.c,e.c);c<=Math.max(sel.c,e.c);c++)tdAt(c,r).classList.add("inrange");
+const td=tdAt(sel.c,sel.r);td.classList.add("sel");
+paintHeaders();cfSync();
+const A=axisSel(),n=A?A.b-A.a+1:0;
+const unit=A?(A.isCol?(n===1?"column":"columns"):(n===1?"row":"rows")):"";
+for(const id of["rcBefore","rcAfter","rcDel"])$(id).disabled=!A;
+if(A){
+$("rcBefore").textContent=(A.isCol?"◀ ":"▲ ")+"Insert "+n+" "+unit;
+$("rcAfter").textContent=(A.isCol?"▶ ":"▼ ")+"Insert "+n+" "+unit;
+$("rcDel").textContent="Delete "+n+" "+unit;
+$("rcBefore").title="Insert "+n+" "+unit+(A.isCol?" to the left":" above");
+$("rcAfter").title="Insert "+n+" "+unit+(A.isCol?" to the right":" below");
+$("rcDel").title="Delete the selected "+unit;
+}else{
+$("rcBefore").textContent="Insert before";$("rcAfter").textContent="Insert after";$("rcDel").textContent="Delete";
+$("rcBefore").title=$("rcAfter").title=$("rcDel").title="Select whole rows or columns first";
+}
+$("cellname").textContent=addr(sel.c,sel.r);
+const c=cell(sheet(),addr(sel.c,sel.r));
+$("finput").value=c&&c.v!=null?c.v:"";
+let dcell=isNumericCell(sheet(),addr(sel.c,sel.r))?c:firstNumeric();
+$("decimals").value=dcell&&dcell.f&&dcell.f.dec!=null?dcell.f.dec:"";
+$("decimals").disabled=!dcell;
+$("cellType").value=c&&c.f&&c.f.type||"auto";
+syncBold();
+dvSync();
+const R0=selRect();
+const rect=tdAt(R0.c2,R0.r2).getBoundingClientRect(),host=gridpos.getBoundingClientRect();
+fillHandle.style.display="block";
+fillHandle.style.left=rect.right-host.left-5+"px";
+fillHandle.style.top=rect.bottom-host.top-5+"px";
+}
+/* ---------- editing ---------- */
+let editor=$("editor");
+let editing=false;
+function startEdit(initial){
+pick=null;
+const sh=sheet(),a=addr(sel.c,sel.r),c=cell(sh,a);
+const td=tdAt(sel.c,sel.r),rect=td.getBoundingClientRect(),host=gridpos.getBoundingClientRect();
+let el;
+if(c&&c.f&&c.f.dv&&initial==null){
+el=document.createElement("select");el.id="editor";
+try{
+const t=tokenize(c.f.dv);const n=parse(t);
+if(n.k!=="range")throw 0;
+const A=resolveRef(n.a,sh),B=resolveRef(n.b,A.sh);
+el.append(new Option("",""));
+for(let r=Math.min(A.r,B.r);r<=Math.max(A.r,B.r);r++)
+for(let c=Math.min(A.c,B.c);c<=Math.max(A.c,B.c);c++){
+const srcA=addr(c,r),v=String(getValue(A.sh,srcA,new Set()));
+if(v==="")continue;
+const o=new Option(v,v);
+o.dataset.bg=(cell(A.sh,srcA)&&cell(A.sh,srcA).f&&cell(A.sh,srcA).f.bg)||"";
+el.append(o);
+}
+}catch(e){alert("Bad dropdown source range: "+c.f.dv);return;}
+el.value=c.v||"";
+el.onchange=()=>{const o=el.selectedOptions[0];commitEdit(el.value,o?o.dataset.bg:"");};
+}else{
+el=document.createElement("input");el.id="editor";el.spellcheck=false;
+el.value=initial!=null?initial:(c&&c.v!=null?c.v:"");
+}
+if(editor)editor.remove();
+editor=el;
+el.style.cssText=`display:block;position:absolute;left:${rect.left-host.left-1}px;top:${rect.top-host.top-1}px;width:${rect.width+2}px;height:${rect.height+2}px;`;
+gridpos.appendChild(el);
+el.focus();
+if(el.tagName==="INPUT"&&initial==null)el.select();
+if(el.tagName==="SELECT")try{el.showPicker&&el.showPicker();}catch(err){}
+editing=true;
+paintRefs();
+faAttach(el);
+el.addEventListener("keydown",ev=>{
+if(ev.key==="Enter"){ev.preventDefault();commitEdit(el.value);move(0,1);}
+else if(ev.key==="Tab"){ev.preventDefault();commitEdit(el.value);move(1,0);}
+else if(ev.key==="Escape"){cancelEdit();}
+});
+el.addEventListener("input",()=>{pick=null;paintRefs();});
+el.addEventListener("click",()=>{pick=null;});
+el.addEventListener("blur",()=>{if(editing&&el.tagName==="INPUT")commitEdit(el.value);});
+}
+function curEditor(){return editor;}
+function commitEdit(val,bg){
+if(!editing)return;editing=false;
+const sh=sheet(),a=addr(sel.c,sel.r);
+if(val===""&&!(cell(sh,a)&&cell(sh,a).f)){delete sh.cells[a];}
+else{const c=ensure(sh,a);c.v=val;if(bg!==undefined&&bg!==""){(c.f=c.f||{}).bg=bg;}else if(bg===""&&c.f&&c.f.dv){c.f.bg="";}}
+hideEditor();paintAll();save();focusGrid();
+}
+function cancelEdit(){editing=false;hideEditor();focusGrid();}
+function hideEditor(){
+pick=null;clearRefs();faHide();
+if(editor){editor.blur();editor.remove();}
+const fresh=document.createElement("input");
+fresh.id="editor";fresh.style.display="none";fresh.tabIndex=-1;
+document.body.appendChild(fresh);
+editor=fresh;
+}
+function focusGrid(force){
+const a=document.activeElement;
+if(!force&&a&&a.isConnected&&a!==document.body&&a!==editor&&(a.isContentEditable||/^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(a.tagName)))return;
+if(a&&a.blur&&a!==document.body)a.blur();
+$("gridwrap").focus({preventScroll:true});
+}
+function move(dc,dr){sel={c:Math.min(COLS-1,Math.max(0,sel.c+dc)),r:Math.min(ROWS-1,Math.max(0,sel.r+dr))};selEnd=null;paintSelection();}
+/* ---------- formula reference picking ---------- */
+let pick=null;
+function refTarget(){
+const el=curEditor();
+if(editing&&el&&el.tagName==="INPUT"&&el.value.trimStart().startsWith("="))return{el,mode:"insert"};
+const fi=$("finput");
+if(document.activeElement===fi&&fi.value.trimStart().startsWith("="))return{el:fi,mode:"insert"};
+const act=document.activeElement;
+if(act&&act.dataset&&act.dataset.pick)return{el:act,mode:"replace",single:act.dataset.pick!=="range"};
+return null;
+}
+function pickTarget(){const t=refTarget();return t?t.el:null;}
+function rangeRef(a,b){
+const c1=Math.min(a.c,b.c),c2=Math.max(a.c,b.c),r1=Math.min(a.r,b.r),r2=Math.max(a.r,b.r);
+return c1===c2&&r1===r2?addr(c1,r1):addr(c1,r1)+":"+addr(c2,r2);
+}
+function qualifiedRef(a,b){return sheet().name+"!"+rangeRef(a,b);}
+function putRef(el,text){
+if(!pick){const at=el.selectionStart!=null?el.selectionStart:el.value.length;pick={start:at,end:at};}
+el.value=el.value.slice(0,pick.start)+text+el.value.slice(pick.end);
+pick.end=pick.start+text.length;
+el.setSelectionRange(pick.end,pick.end);
+el.focus();
+paintRefs();faUpdate(el);
+}
+const REF_RE=/(?<![A-Za-z0-9_$!])(?:([A-Za-z_][A-Za-z0-9_ ]*)!)?(\$?)([A-Za-z]+)(\$?)(\d+)(?:\s*:\s*(\$?)([A-Za-z]+)(\$?)(\d+))?(?![A-Za-z0-9_(])/g;
+function clearRefs(){
+if(!table)return;
+for(const td of table.querySelectorAll("td.ref"))
+td.classList.remove("ref","ref0","ref1","ref2","ref3","ref4");
+}
+function paintRefs(){
+clearRefs();
+const el=pickTarget();
+if(!el)return;
+const seen=new Map();
+for(const m of el.value.matchAll(REF_RE)){
+const[,shn,,c1,,r1,,c2,,r2]=m;
+if(shn&&shn.trim().toLowerCase()!==sheet().name.toLowerCase())continue;
+const key=m[0].toUpperCase();
+if(!seen.has(key))seen.set(key,seen.size%5);
+const cls=seen.get(key);
+const a={c:colIdx(c1),r:+r1-1},b=c2?{c:colIdx(c2),r:+r2-1}:a;
+for(let r=Math.min(a.r,b.r);r<=Math.max(a.r,b.r);r++){
+if(r<0||r>=ROWS)continue;
+for(let c=Math.min(a.c,b.c);c<=Math.max(a.c,b.c);c++){
+if(c<0||c>=COLS)continue;
+const td=tdAt(c,r);td.classList.add("ref","ref"+cls);
+}
+}
+}
+}
+/* ---------- formula autocomplete ---------- */
+const fapop=$("fapop");
+const FNAMES=Object.keys(FNS).sort();
+let faList=[],faIdx=0,faCall=null,faTook=false;
+function faCtx(text,caret){
+if(!text.trimStart().startsWith("="))return null;
+const s=text.slice(0,caret);
+const stack=[];let name="",q=false;
+for(let i=0;i<s.length;i++){
+const ch=s[i];
+if(q){if(ch==='"')q=false;continue;}
+if(ch==='"'){q=true;name="";}
+else if(/[A-Za-z0-9_.]/.test(ch))name+=ch;
+else if(ch==="("){stack.push({n:name.toUpperCase(),a:0});name="";}
+else if(ch===")"){stack.pop();name="";}
+else if(ch===","||ch===";"){if(stack.length)stack[stack.length-1].a++;name="";}
+else name="";
+}
+return{prefix:name.toUpperCase(),call:stack.length?stack[stack.length-1]:null};
+}
+function faHide(){fapop.hidden=true;fapop.innerHTML="";faList=[];faCall=null;}
+function faUpdate(el){
+if(!el||!el.isConnected){faHide();return;}
+const ctx=faCtx(el.value,el.selectionStart==null?el.value.length:el.selectionStart);
+if(!ctx){faHide();return;}
+const was=faList.join(",");
+faList=ctx.prefix?FNAMES.filter(n=>n.startsWith(ctx.prefix)).sort((a,b)=>a.length-b.length||(a<b?-1:1)):[];
+faCall=ctx.call&&SIG.has(ctx.call.n)?ctx.call:null;
+if(!faList.length&&!faCall){faHide();return;}
+faIdx=faList.join(",")===was?faIdx:0;
+faPaint(el);
+}
+function faSpan(cls,text){const e=document.createElement("span");e.className=cls;e.textContent=text;return e;}
+function faPaint(el){
+fapop.innerHTML="";
+if(faList.length)faPaintList(el);
+else faPaintSig();
+fapop.hidden=false;
+const r=el.getBoundingClientRect(),w=fapop.offsetWidth,h=fapop.offsetHeight;
+let L=r.left,T=r.bottom+2;
+if(L+w>innerWidth-6)L=Math.max(6,innerWidth-6-w);
+if(T+h>innerHeight-6&&r.top-4-h>0)T=r.top-2-h;
+fapop.style.left=L+"px";fapop.style.top=T+"px";
+const on=fapop.querySelector("li.on");
+if(on)on.scrollIntoView({block:"nearest"});
+}
+function faPaintList(el){
+const ul=document.createElement("ul");
+faList.forEach((n,i)=>{
+const li=document.createElement("li"),s=SIG.get(n);
+if(i===faIdx)li.className="on";
+li.append(faSpan("nm mono",n),faSpan("ar mono","("+(s?s.p.join(", "):"…")+")"),faSpan("ds",s?s.d:""));
+li.addEventListener("mousedown",ev=>{ev.preventDefault();faIdx=i;faAccept(el);});
+ul.append(li);
+});
+fapop.append(ul);
+}
+function faPaintSig(){
+const s=SIG.get(faCall.n),d=document.createElement("div");
+d.className="sig mono";
+d.append(faCall.n+"(");
+s.p.forEach((p,i)=>{
+if(i)d.append(", ");
+const last=i===s.p.length-1;
+if(i===faCall.a||(last&&faCall.a>i&&/…$/.test(p))){
+const b=document.createElement("b");b.textContent=p;d.append(b);
+}else d.append(p);
+});
+d.append(")");
+fapop.append(d);
+if(s.d)fapop.append(faSpan("desc",s.d));
+if(s.p.length>1){
+const f=faSpan("foot","separate arguments with , or ;");
+fapop.append(f);
+}
+}
+function faAccept(el){
+const n=faList[faIdx];if(!n)return;
+const car=el.selectionStart==null?el.value.length:el.selectionStart;
+const ctx=faCtx(el.value,car);
+const st=car-(ctx?ctx.prefix.length:0),rest=el.value.slice(car);
+const s=SIG.get(n),open=rest.startsWith("(")?"":(s&&!s.p.length?"()":"(");
+el.value=el.value.slice(0,st)+n+open+rest;
+const cp=st+n.length+(rest.startsWith("(")?1:open.length);
+el.setSelectionRange(cp,cp);
+el.focus();
+pick=null;paintRefs();faUpdate(el);
+}
+function faKey(e){
+if(fapop.hidden)return;
+const el=e.currentTarget;
+const stop=()=>{e.preventDefault();e.stopImmediatePropagation();faTook=true;};
+if(e.key==="Escape"){faHide();stop();}
+else if(!faList.length)return;
+else if(e.key==="ArrowDown"||e.key==="ArrowUp"){
+faIdx=(faIdx+(e.key==="ArrowDown"?1:faList.length-1))%faList.length;faPaint(el);stop();
+}
+else if(e.key==="Enter"||e.key==="Tab"){faAccept(el);stop();}
+}
+function faAttach(el){
+el.addEventListener("keydown",faKey);
+const u=()=>faUpdate(el);
+el.addEventListener("input",u);
+el.addEventListener("click",u);
+el.addEventListener("keyup",()=>{if(faTook)faTook=false;else faUpdate(el);});
+el.addEventListener("blur",faHide);
+}
+faAttach($("finput"));
+/* ---------- clipboard ---------- */
+let clip=null;
+function selRect(){
+const e=selEnd||sel;
+return{c1:Math.min(sel.c,e.c),c2:Math.max(sel.c,e.c),r1:Math.min(sel.r,e.r),r2:Math.max(sel.r,e.r)};
+}
+function eachSelected(fn){
+const R=selRect(),sh=sheet();
+for(let r=R.r1;r<=R.r2;r++)for(let c=R.c1;c<=R.c2;c++)fn(ensure(sh,addr(c,r)));
+paintAll();save();
+}
+/* ---------- colour palette ---------- */
+const TEXT_COLORS=["#37474f","#b04b45","#b56a2e","#8f7419","#4b8b4a","#3a8a86","#3a6ea8","#4f5fa8","#7a4f96","#8a5c46"];
+const FILL_COLORS=["#eceff1","#f7e3e0","#fbe9d8","#f8f0cf","#e3f0e0","#dcefee","#dfe9f5","#e4e6f5","#ede2f2","#efe4de"];
+const applyFg=v=>eachSelected(c=>{c.f=c.f||{};if(v==="")delete c.f.color;else c.f.color=v;});
+function selAllBold(){
+const R=selRect(),sh=sheet();
+for(let r=R.r1;r<=R.r2;r++)for(let c=R.c1;c<=R.c2;c++){
+const x=cell(sh,addr(c,r));
+if(!(x&&x.f&&x.f.bold))return false;
+}
+return true;
+}
+function toggleBold(){
+const on=!selAllBold();
+eachSelected(c=>{c.f=c.f||{};if(on)c.f.bold=true;else delete c.f.bold;});
+syncBold();
+}
+function syncBold(){$("boldBtn").setAttribute("aria-pressed",selAllBold()?"true":"false");}
+const applyBg=v=>eachSelected(c=>{c.f=c.f||{};if(v==="")delete c.f.bg;else c.f.bg=v;});
+const cpop=$("cpop");
+let cpopOwner=null;
+function closeCpop(){
+if(!cpopOwner)return;
+const inp=cpop.querySelector("input[type=color]");
+if(inp)$("cinputs").appendChild(inp);
+cpop.hidden=true;cpop.innerHTML="";cpopOwner=null;
+}
+function openCpop(btn,colors,apply,input,dot){
+if(cpopOwner===btn){closeCpop();return;}
+closeCpop();
+cpopOwner=btn;
+const none=document.createElement("button");
+none.className="none";none.textContent="Default";
+none.onclick=()=>{apply("");dot.style.background="#fff";closeCpop();};
+cpop.appendChild(none);
+const grid=document.createElement("div");grid.className="grid";
+for(const col of colors){
+const b=document.createElement("button");
+b.className="sw";b.style.background=col;b.title=col;
+b.onclick=()=>{apply(col);dot.style.background=col;closeCpop();};
+grid.appendChild(b);
+}
+cpop.appendChild(grid);
+const row=document.createElement("div");row.className="row";
+row.append(document.createTextNode("Custom"));row.appendChild(input);
+cpop.appendChild(row);
+cpop.hidden=false;
+const r=btn.getBoundingClientRect();
+cpop.style.left=Math.round(window.scrollX+r.left)+"px";
+cpop.style.top=Math.round(window.scrollY+r.bottom+4)+"px";
+}
+/* ---------- borders ---------- */
+const BD_TOP=1,BD_RIGHT=2,BD_BOTTOM=4,BD_LEFT=8;
+const BD_OPP={1:4,4:1,2:8,8:2},BD_STEP={1:[0,-1],4:[0,1],2:[1,0],8:[-1,0]};
+function setEdge(sh,c,r,bit,on){
+if(c<0||r<0||c>=COLS||r>=ROWS)return;
+const a=addr(c,r),cur=cell(sh,a);
+if(!on&&!(cur&&cur.f&&cur.f.b))return;
+const cl=on?ensure(sh,a):cur,f=on?(cl.f=cl.f||{}):cl.f;
+const b=on?((f.b|0)|bit):((f.b|0)&~bit);
+if(b)f.b=b;else delete f.b;
+if(b)return;
+if(!Object.keys(f).length)delete cl.f;
+if(cl.v===undefined&&!cl.f)delete sh.cells[a];
+}
+function setEdgePair(sh,c,r,bit,on){
+setEdge(sh,c,r,bit,on);
+const[dc,dr]=BD_STEP[bit];
+setEdge(sh,c+dc,r+dr,BD_OPP[bit],on);
+}
+function applyBorder(on){
+const R=selRect(),sh=sheet();
+for(let c=R.c1;c<=R.c2;c++){setEdgePair(sh,c,R.r1,BD_TOP,on);setEdgePair(sh,c,R.r2,BD_BOTTOM,on);}
+for(let r=R.r1;r<=R.r2;r++){setEdgePair(sh,R.c1,r,BD_LEFT,on);setEdgePair(sh,R.c2,r,BD_RIGHT,on);}
+paintAll();save();
+focusGrid(true);
+}
+function paintBorders(td,b){
+if(!b&&!td.dataset.b)return;
+const st=td.style;
+st.borderTopColor=b&BD_TOP?"#000":"";
+st.borderRightColor=b&BD_RIGHT?"#000":"";
+st.borderBottomColor=b&BD_BOTTOM?"#000":"";
+st.borderLeftColor=b&BD_LEFT?"#000":"";
+if(b)td.dataset.b="1";else delete td.dataset.b;
+}
+function isNumericCell(sh,a){
+const c=cell(sh,a);if(!c)return false;
+return typeof getValue(sh,a,new Set())==="number";
+}
+function firstNumeric(){
+const R=selRect(),sh=sheet();
+for(let r=R.r1;r<=R.r2;r++)for(let c=R.c1;c<=R.c2;c++){
+const a=addr(c,r);if(isNumericCell(sh,a))return cell(sh,a);
+}
+return null;
+}
+function eachNumeric(fn){
+const R=selRect(),sh=sheet();
+for(let r=R.r1;r<=R.r2;r++)for(let c=R.c1;c<=R.c2;c++){
+const a=addr(c,r);if(isNumericCell(sh,a))fn(ensure(sh,a));
+}
+paintAll();save();
+}
+function paintClip(){
+for(const id of["pasteAll","pasteVals","pasteFmt"])$(id).disabled=!(clip&&!clip.cut);
+if(!table)return;
+for(const td of table.querySelectorAll("td.clip"))td.classList.remove("clip");
+if(!clip||clip.sheet!==wb.active)return;
+for(let r=clip.origin.r;r<clip.origin.r+clip.h;r++)
+for(let c=clip.origin.c;c<clip.origin.c+clip.w;c++)
+if(r<ROWS&&c<COLS)tdAt(c,r).classList.add("clip");
+}
+function takeBorder(sh,a){const c=cell(sh,a);return c&&c.f?c.f.b|0:0;}
+function putBorder(sh,a,b){if(b)(ensure(sh,a).f??={}).b=b;}
+function stripBorder(o){
+if(o&&o.f){delete o.f.b;if(!Object.keys(o.f).length)delete o.f;}
+return o;
+}
+function copySel(cut){
+const R=selRect(),sh=sheet(),cells=[],vals=[],lines=[];
+for(let r=R.r1;r<=R.r2;r++){
+const row=[],text=[],raw=[];
+for(let c=R.c1;c<=R.c2;c++){
+const a=addr(c,r),o=cell(sh,a);
+row.push(o?stripBorder(JSON.parse(JSON.stringify(o))):null);
+text.push(displayValue(sh,a).text);
+let v="";try{v=getValue(sh,a,new Set());}catch(err){v="";}
+raw.push(v&&typeof v==="object"?"":typeof v==="boolean"?(v?"TRUE":"FALSE"):String(v));
+}
+cells.push(row);vals.push(raw);lines.push(text.join("\t"));
+}
+clip={w:R.c2-R.c1+1,h:R.r2-R.r1+1,cells,vals,origin:{c:R.c1,r:R.r1},cut:!!cut,sheet:wb.active};
+paintClip();
+if(navigator.clipboard&&navigator.clipboard.writeText)
+navigator.clipboard.writeText(lines.join("\n")).catch(()=>{});
+}
+function writeCell(sh,c,r,src,dc,dr,mode){
+const a=addr(c,r),b=takeBorder(sh,a),keep=cell(sh,a);
+const o=src?stripBorder(JSON.parse(JSON.stringify(src))):null;
+if(o&&typeof o.v==="string"&&o.v[0]==="="&&(dc||dr))o.v=shiftFormula(o.v,dc,dr);
+if(mode==="formulas"){
+const f=keep&&keep.f?keep.f:null;
+if(o&&o.v!==undefined){sh.cells[a]={v:o.v};if(f)sh.cells[a].f=f;}
+else if(f)sh.cells[a]={f};
+else delete sh.cells[a];
+}else if(mode==="format"){
+const v=keep?keep.v:undefined;
+const f=o&&o.f?o.f:null;
+if(f||v!==undefined){sh.cells[a]={};if(v!==undefined)sh.cells[a].v=v;if(f)sh.cells[a].f=f;}
+else delete sh.cells[a];
+}else{
+if(o)sh.cells[a]=o;else delete sh.cells[a];
+}
+putBorder(sh,a,b);
+}
+function pasteInternal(mode){
+const sh=sheet(),R=selRect();
+const w=Math.max(clip.w,R.c2-R.c1+1),h=Math.max(clip.h,R.r2-R.r1+1);
+for(let dr=0;dr<h;dr++)for(let dc=0;dc<w;dc++){
+const c=R.c1+dc,r=R.r1+dr;
+if(c>=COLS||r>=ROWS)continue;
+const j=dc%clip.w,i=dr%clip.h;
+if(mode==="values"){
+const t=clip.vals[i][j],a=addr(c,r),b=takeBorder(sh,a);
+if(t==="")delete sh.cells[a];else sh.cells[a]={v:t};
+putBorder(sh,a,b);
+}else{
+writeCell(sh,c,r,clip.cells[i][j],c-(clip.origin.c+j),r-(clip.origin.r+i),mode);
+}
+}
+if(clip.cut){
+if(clip.sheet===wb.active){
+const csh=wb.sheets[clip.sheet];
+for(let r=clip.origin.r;r<clip.origin.r+clip.h;r++)
+for(let c=clip.origin.c;c<clip.origin.c+clip.w;c++){
+const a=addr(c,r);
+if(c>=R.c1&&c<R.c1+w&&r>=R.r1&&r<R.r1+h)continue;
+const b=takeBorder(csh,a);
+delete csh.cells[a];
+putBorder(csh,a,b);
+}
+}
+}
+if(clip.cut||clip.w!==1||clip.h!==1)clip=null;
+paintAll();paintClip();save();
+}
+function pasteText(txt){
+const sh=sheet(),R=selRect(),rows=txt.replace(/\r/g,"").replace(/\n$/,"").split("\n").map(l=>l.split("\t"));
+for(let i=0;i<rows.length;i++)for(let j=0;j<rows[i].length;j++){
+const c=R.c1+j,r=R.r1+i;
+if(c>=COLS||r>=ROWS)continue;
+const v=rows[i][j],a=addr(c,r),b=takeBorder(sh,a);
+if(v==="")delete sh.cells[a];else ensure(sh,a).v=v;
+putBorder(sh,a,b);
+}
+paintAll();save();
+}
+document.addEventListener("keydown",e=>{
+if(!(e.ctrlKey||e.metaKey))return;
+const k=e.key.toLowerCase();
+if(k==="s"){
+e.preventDefault();
+if(!canSaveInPlace()){downloadHtml();return;}
+savetip("Saving\u2026");
+saveInPlace().then(n=>savetip("Saved to "+n)).catch(err=>{
+$("savetip").style.display="none";
+if(err.name!=="AbortError")alert("Could not save the file: "+err.message);
+});
+return;
+}
+if(editing||e.target.tagName==="INPUT"||e.target.tagName==="SELECT"||e.target.isContentEditable)return;
+if(k==="z"){e.preventDefault();if(e.shiftKey)redo();else undo();return;}
+if(k==="y"){e.preventDefault();redo();return;}
+if(k==="b"){e.preventDefault();toggleBold();return;}
+if(k==="c"||k==="x"){copySel(k==="x");e.preventDefault();}
+else if(k==="v"){
+e.preventDefault();
+if(clip){pasteInternal(e.shiftKey?"values":"all");return;}
+if(navigator.clipboard&&navigator.clipboard.readText)
+navigator.clipboard.readText().then(t=>{if(t)pasteText(t);}).catch(()=>{});
+}
+});
+document.addEventListener("paste",e=>{
+if(editing||e.target.tagName==="INPUT"||e.target.tagName==="SELECT"||e.target.isContentEditable)return;
+if(clip)return;
+const t=e.clipboardData&&e.clipboardData.getData("text/plain");
+if(t){e.preventDefault();pasteText(t);}
+});
+/* ---------- header selection & sizing ---------- */
+function selectBand(isCol,a,b){
+if(isCol){sel={c:Math.min(a,b),r:0};selEnd={c:Math.max(a,b),r:ROWS-1};}
+else{sel={c:0,r:Math.min(a,b)};selEnd={c:COLS-1,r:Math.max(a,b)};}
+paintSelection();
+}
+$("gridwrap").addEventListener("mousedown",e=>{
+if(e.target.classList.contains("rsz-c")||e.target.classList.contains("rsz-r"))return;
+const th=e.target.closest("th");
+if(!th||refTarget())return;
+e.preventDefault();focusGrid(true);
+const cs=th.dataset.c,rs=th.dataset.r;
+if(cs===undefined&&rs===undefined){
+sel={c:0,r:0};selEnd={c:COLS-1,r:ROWS-1};paintSelection();return;
+}
+const isCol=cs!==undefined,start=+(isCol?cs:rs);
+const from=e.shiftKey?(isCol?sel.c:sel.r):start;
+selectBand(isCol,from,start);
+const mm=ev=>{
+const t=ev.target.closest&&ev.target.closest("th");
+if(!t)return;
+const v=isCol?t.dataset.c:t.dataset.r;
+if(v!==undefined)selectBand(isCol,from,+v);
+};
+const mu=()=>{removeEventListener("mousemove",mm);removeEventListener("mouseup",mu);};
+addEventListener("mousemove",mm);addEventListener("mouseup",mu);
+});
+document.addEventListener("mousedown",e=>{
+const rc=e.target.classList.contains("rsz-c"),rr=e.target.classList.contains("rsz-r");
+if(!rc&&!rr)return;
+e.preventDefault();e.stopPropagation();
+const sh=sheet(),c=+e.target.dataset.c,r=+e.target.dataset.r;
+const start=rc?e.clientX:e.clientY;
+const base=rc?(sh.colW[c]||DEFW):(sh.rowH[r]||22);
+const tip=$("sizetip");
+const mm=ev=>{
+const d=(rc?ev.clientX:ev.clientY)-start;
+let size;
+if(rc){size=sh.colW[c]=Math.max(30,base+d);table.tHead.rows[0].cells[c+1].style.width=size+"px";sizeTable();}
+else{size=sh.rowH[r]=Math.max(16,base+d);table.tBodies[0].rows[r].style.height=size+"px";}
+tip.textContent=size+" px";
+tip.style.display="block";
+tip.style.left=(ev.clientX+12)+"px";tip.style.top=(ev.clientY+12)+"px";
+paintSelection();
+};
+const mu=()=>{
+removeEventListener("mousemove",mm);removeEventListener("mouseup",mu);
+tip.style.display="none";save();
+};
+addEventListener("mousemove",mm);addEventListener("mouseup",mu);
+});
+/* ---------- events ---------- */
+$("gridwrap").addEventListener("mousedown",e=>{
+const td=e.target.closest("td");
+if(e.target.classList.contains("rsz-c")||e.target.classList.contains("rsz-r"))return;
+if(!td)return;
+const rt=refTarget();
+if(rt){
+e.preventDefault();
+const anchor={c:+td.dataset.c,r:+td.dataset.r};
+const set=b=>{
+if(rt.mode==="replace"){
+rt.el.value=rt.single?qualifiedRef(anchor,anchor):qualifiedRef(anchor,b);
+rt.el.focus();
+rt.el.dispatchEvent(new Event("input",{bubbles:true}));
+paintRefs();
+}
+else putRef(rt.el,rangeRef(anchor,b));
+};
+set(anchor);
+const fed=rt.el;
+const mm=ev=>{const t=ev.target.closest&&ev.target.closest("td");
+if(t)set({c:+t.dataset.c,r:+t.dataset.r});};
+const mu=()=>{removeEventListener("mousemove",mm);removeEventListener("mouseup",mu);};
+addEventListener("mousemove",mm);addEventListener("mouseup",mu);
+return;
+}
+if(editing)commitEdit(curEditor().value);
+const tc=+td.dataset.c,tr=+td.dataset.r,tcell=cell(sheet(),addr(tc,tr));
+const hasDv=!!(tcell&&tcell.f&&tcell.f.dv);
+if(hasDv&&e.target.classList.contains("dvmark")){
+sel={c:tc,r:tr};selEnd=null;paintSelection();
+e.preventDefault();startEdit();
+return;
+}
+const openOnUp=hasDv&&sel.c===tc&&sel.r===tr&&!selEnd;
+let moved=false;
+if(e.shiftKey){selEnd={c:tc,r:tr};paintSelection();return;}
+sel={c:tc,r:tr};selEnd=null;paintSelection();
+const mm=ev=>{const t=ev.target.closest("td");if(t){moved=moved||+t.dataset.c!==tc||+t.dataset.r!==tr;selEnd={c:+t.dataset.c,r:+t.dataset.r};paintSelection();}};
+const mu=()=>{removeEventListener("mousemove",mm);removeEventListener("mouseup",mu);
+if(openOnUp&&!moved)startEdit();};
+addEventListener("mousemove",mm);addEventListener("mouseup",mu);
+});
+$("gridwrap").addEventListener("dblclick",e=>{if(e.target.closest("td"))startEdit();});
+/* ---------- fill handle ---------- */
+function fillRect(R,tc,tr){
+const dDown=tr-R.r2,dUp=R.r1-tr,dRight=tc-R.c2,dLeft=R.c1-tc;
+const vert=Math.max(dDown,dUp),horz=Math.max(dRight,dLeft);
+if(vert<=0&&horz<=0)return null;
+if(vert>=horz)return{c1:R.c1,c2:R.c2,r1:Math.min(R.r1,tr),r2:Math.max(R.r2,tr)};
+return{c1:Math.min(R.c1,tc),c2:Math.max(R.c2,tc),r1:R.r1,r2:R.r2};
+}
+function paintFill(F,R){
+for(const td of table.querySelectorAll("td.filling"))td.classList.remove("filling");
+if(!F)return;
+for(let r=F.r1;r<=F.r2;r++)for(let c=F.c1;c<=F.c2;c++)
+if(r<R.r1||r>R.r2||c<R.c1||c>R.c2)tdAt(c,r).classList.add("filling");
+}
+function doFill(F,R){
+const sh=sheet(),w=R.c2-R.c1+1,h=R.r2-R.r1+1;
+const mod=(n,m)=>((n%m)+m)%m;
+for(let r=F.r1;r<=F.r2;r++)for(let c=F.c1;c<=F.c2;c++){
+if(r>=R.r1&&r<=R.r2&&c>=R.c1&&c<=R.c2)continue;
+const sc=R.c1+mod(c-R.c1,w),sr=R.r1+mod(r-R.r1,h);
+writeCell(sh,c,r,cell(sh,addr(sc,sr)),c-sc,r-sr,"all");
+}
+paintAll();save();
+}
+function fillHandleDown(e){
+e.preventDefault();e.stopPropagation();
+if(editing)commitEdit(curEditor().value);
+const R=selRect();
+let F=null;
+const mm=ev=>{
+const t=document.elementFromPoint(ev.clientX,ev.clientY);
+const td=t&&t.closest&&t.closest("td");
+if(!td)return;
+F=fillRect(R,+td.dataset.c,+td.dataset.r);
+paintFill(F,R);
+};
+const mu=()=>{
+removeEventListener("mousemove",mm);removeEventListener("mouseup",mu);
+paintFill(null,R);
+if(!F)return;
+doFill(F,R);
+sel={c:F.c1,r:F.r1};selEnd={c:F.c2,r:F.r2};
+paintSelection();
+};
+addEventListener("mousemove",mm);addEventListener("mouseup",mu);
+}
+document.addEventListener("keydown",e=>{
+if(editing||e.target.tagName==="INPUT"||e.target.tagName==="SELECT"||e.target.isContentEditable)return;
+if(e.key==="ArrowUp"){move(0,-1);e.preventDefault();}
+else if(e.key==="ArrowDown"||e.key==="Enter"){move(0,1);e.preventDefault();}
+else if(e.key==="ArrowLeft"){move(-1,0);e.preventDefault();}
+else if(e.key==="ArrowRight"||e.key==="Tab"){move(1,0);e.preventDefault();}
+else if(e.key==="Delete"&&axisSel()){
+const A=axisSel();
+deleteAt(A.a,A.b-A.a+1,A.isCol);
+e.preventDefault();
+}
+else if(e.key==="Delete"||e.key==="Backspace"){
+const en=selEnd||sel,sh=sheet();
+for(let r=Math.min(sel.r,en.r);r<=Math.max(sel.r,en.r);r++)
+for(let c=Math.min(sel.c,en.c);c<=Math.max(sel.c,en.c);c++)delete sh.cells[addr(c,r)];
+paintAll();save();e.preventDefault();
+}
+else if(e.key==="Escape"){if(clip){clip=null;paintClip();}}
+else if(e.key==="F2"){startEdit();}
+else if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){e.preventDefault();startEdit(e.key);}
+});
+$("finput").addEventListener("keydown",e=>{
+if(e.key==="Enter"){
+const sh=sheet(),a=addr(sel.c,sel.r);
+const v=$("finput").value;
+if(v==="")delete sh.cells[a];else ensure(sh,a).v=v;
+pick=null;paintAll();clearRefs();save();e.preventDefault();
+focusGrid(true);
+move(0,1);
+}
+});
+$("finput").addEventListener("input",()=>{pick=null;paintRefs();});
+$("finput").addEventListener("click",()=>{pick=null;});
+$("finput").addEventListener("focus",()=>{pick=null;paintRefs();});
+$("finput").addEventListener("blur",()=>{pick=null;clearRefs();});
+let dvKeep=false;
+function dvPicking(){const t=refTarget();return!!t&&t.mode==="replace";}
+$("boldBtn").onclick=toggleBold;
+$("fgBtn").onclick=()=>openCpop($("fgBtn"),TEXT_COLORS,applyFg,$("fgColor"),$("fgDot"));
+$("bgBtn").onclick=()=>openCpop($("bgBtn"),FILL_COLORS,applyBg,$("bgColor"),$("bgDot"));
+document.addEventListener("mousedown",e=>{
+if(cpopOwner&&!cpop.contains(e.target)&&e.target!==cpopOwner&&!cpopOwner.contains(e.target))closeCpop();
+},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeCpop();});
+$("fgColor").addEventListener("input",e=>{applyFg(e.target.value);$("fgDot").style.background=e.target.value;});
+$("bgColor").addEventListener("input",e=>{applyBg(e.target.value);$("bgDot").style.background=e.target.value;});
+$("decimals").addEventListener("change",e=>{const v=e.target.value;eachNumeric(c=>{c.f=c.f||{};if(v==="")delete c.f.dec;else c.f.dec=+v;});});
+$("bdOn").onclick=()=>applyBorder(true);
+$("bdOff").onclick=()=>applyBorder(false);
+$("cellType").addEventListener("change",e=>eachSelected(c=>{c.f=c.f||{};if(e.target.value==="auto")delete c.f.type;else c.f.type=e.target.value;}));
+/* ---------- tabs ---------- */
+function renderTabs(){
+const t=$("tabs");t.innerHTML="";
+wb.sheets.forEach((s,i)=>{
+const d=document.createElement("div");d.className="tab"+(i===wb.active?" on":"");d.textContent=s.name;
+d.onmousedown=e=>{if(dvPicking())e.preventDefault();};
+d.onclick=()=>{
+const t=refTarget(),picking=!!t&&t.mode==="replace",pickEl=t&&t.el;
+wb.active=i;
+if(!picking){sel={r:0,c:0};selEnd=null;}
+buildGrid();renderTabs();
+if(picking){dvKeep=true;pickEl.focus();dvKeep=false;paintRefs();}
+};
+d.ondblclick=()=>{const n=prompt("Sheet name",s.name);if(n&&!sheetByName(n)){s.name=n;renderTabs();paintAll();save();}};
+d.oncontextmenu=e=>{e.preventDefault();if(wb.sheets.length>1&&confirm("Delete sheet "+s.name+"?")){wb.sheets.splice(i,1);wb.active=0;buildGrid();renderTabs();save();}};
+t.appendChild(d);
+});
+const add=document.createElement("button");add.textContent="+";
+add.onclick=()=>{let i=wb.sheets.length+1,n;do{n="Sheet"+i++}while(sheetByName(n));wb.sheets.push(newSheet(n));wb.active=wb.sheets.length-1;buildGrid();renderTabs();save();};
+t.appendChild(add);
+const st=document.createElement("span");st.id="status";st.textContent="dblclick tab: rename · right-click: delete";
+const vr=document.createElement("span");vr.className="ver";
+vr.textContent="v"+APP_VERSION;vr.title="Simple xlsx version "+APP_VERSION;
+st.appendChild(vr);
+t.appendChild(st);
+}
+/* ---------- XLSX export ---------- */
+const CRCT=(()=>{const t=new Uint32Array(256);
+for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}
+return t;})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRCT[(c^u8[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0;}
+function zipStore(files){
+const enc=new TextEncoder(),parts=[],dir=[];let off=0;
+const u16=v=>[v&255,(v>>8)&255],u32=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255];
+for(const f of files){
+const name=enc.encode(f.name),data=typeof f.data==="string"?enc.encode(f.data):f.data;
+const crc=crc32(data);
+const local=[...u32(0x04034b50),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),
+...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),...u16(0)];
+parts.push(new Uint8Array(local),name,data);
+dir.push([...u32(0x02014b50),...u16(20),...u16(20),...u16(0),...u16(0),...u16(0),...u16(0),
+...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),
+...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off),...Array.from(name)]);
+off+=local.length+name.length+data.length;
+}
+const cd=[].concat(...dir),end=[...u32(0x06054b50),...u16(0),...u16(0),
+...u16(files.length),...u16(files.length),...u32(cd.length),...u32(off),...u16(0)];
+const blobParts=[...parts,new Uint8Array(cd),new Uint8Array(end)];
+return new Blob(blobParts,{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+const xesc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const qSheet=n=>/^[A-Za-z_][A-Za-z0-9_]*$/.test(n)?n:"'"+n.replace(/'/g,"''")+"'";
+function xlFormula(src){
+let s=src.slice(1);
+s=s.replace(/([A-Za-z_][A-Za-z0-9_ ]*)!(\$?[A-Za-z]+\$?\d+)/g,(m,shn,ref)=>qSheet(shn.trim())+"!"+ref);
+s=s.replace(/#REF(?!!)/g,"#REF!");
+return vlookupExact(s);
+}
+function vlookupExact(s){
+let out="",i=0;
+while(i<s.length){
+const m=/VLOOKUP\s*\(/i.exec(s.slice(i));
+if(!m){out+=s.slice(i);break;}
+const start=i+m.index,open=start+m[0].length;
+let depth=1,j=open,commas=0,inStr=false;
+for(;j<s.length&&depth;j++){
+const ch=s[j];
+if(ch==='"'){inStr=!inStr;continue;}
+if(inStr)continue;
+if(ch==="(")depth++;
+else if(ch===")")depth--;
+else if(ch===","&&depth===1)commas++;
+}
+const close=j-1;
+if(depth){out+=s.slice(i);break;}
+const inner=s.slice(open,close);
+out+=s.slice(i,open)+vlookupExact(inner)+(commas===2?",FALSE":"")+")";
+i=close+1;
+}
+return out;
+}
+function xlStyles(){
+const fonts=['<font><sz val="11"/><name val="Calibri"/></font>'];
+const fills=['<fill><patternFill patternType="none"/></fill>','<fill><patternFill patternType="gray125"/></fill>'];
+const borders=['<border><left/><right/><top/><bottom/><diagonal/></border>'];
+const numFmts=[],xfs=['<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>'];
+const fontI=new Map(),fillI=new Map(),bordI=new Map(),numI=new Map(),xfI=new Map();
+const hex=c=>"FF"+String(c||"").replace("#","").toUpperCase().padStart(6,"0").slice(-6);
+const S={
+font(c,bold){if(!c&&!bold)return 0;
+const key=(c||"")+"|"+(bold?1:0);
+if(fontI.has(key))return fontI.get(key);
+fonts.push("<font>"+(bold?"<b/>":"")+'<sz val="11"/><name val="Calibri"/>'+
+(c?'<color rgb="'+hex(c)+'"/>':"")+"</font>");
+fontI.set(key,fonts.length-1);return fonts.length-1;},
+fill(c){if(!c)return 0;if(fillI.has(c))return fillI.get(c);
+fills.push('<fill><patternFill patternType="solid"><fgColor rgb="'+hex(c)+'"/><bgColor indexed="64"/></patternFill></fill>');
+fillI.set(c,fills.length-1);return fills.length-1;},
+border(b){b|=0;if(!b)return 0;if(bordI.has(b))return bordI.get(b);
+const tag=(nm,on)=>on?"<"+nm+' style="thin"><color rgb="FF000000"/></'+nm+">":"<"+nm+"/>";
+borders.push("<border>"+tag("left",b&BD_LEFT)+tag("right",b&BD_RIGHT)+
+tag("top",b&BD_TOP)+tag("bottom",b&BD_BOTTOM)+"<diagonal/></border>");
+bordI.set(b,borders.length-1);return borders.length-1;},
+num(d){if(d==null)return 0;if(numI.has(d))return numI.get(d);
+const id=164+numI.size;
+numFmts.push('<numFmt numFmtId="'+id+'" formatCode="'+(d>0?"0."+"0".repeat(d):"0")+'"/>');
+numI.set(d,id);return id;},
+xf(f){
+if(!f)return 0;
+const nf=S.num(f.dec!=null?f.dec:null),fo=S.font(f.color,f.bold),fi=S.fill(f.bg),bo=S.border(f.b);
+if(!nf&&!fo&&!fi&&!bo)return 0;
+const key=nf+"|"+fo+"|"+fi+"|"+bo;
+if(xfI.has(key))return xfI.get(key);
+xfs.push('<xf numFmtId="'+nf+'" fontId="'+fo+'" fillId="'+fi+'" borderId="'+bo+'" xfId="0"'+
+(nf?' applyNumberFormat="1"':"")+(fo?' applyFont="1"':"")+
+(fi?' applyFill="1"':"")+(bo?' applyBorder="1"':"")+"/>");
+xfI.set(key,xfs.length-1);return xfs.length-1;},
+dxfs:[],
+dxf(f){
+const body="<dxf>"+((f.color||f.bold)?"<font>"+(f.bold?"<b/>":"")+
+(f.color?'<color rgb="'+hex(f.color)+'"/>':"")+"</font>":"")+
+(f.bg?'<fill><patternFill><bgColor rgb="'+hex(f.bg)+'"/></patternFill></fill>':"")+"</dxf>";
+let i=S.dxfs.indexOf(body);
+if(i<0){S.dxfs.push(body);i=S.dxfs.length-1;}
+return i;},
+xml(){
+return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+(numFmts.length?'<numFmts count="'+numFmts.length+'">'+numFmts.join("")+"</numFmts>":"")+
+'<fonts count="'+fonts.length+'">'+fonts.join("")+"</fonts>"+
+'<fills count="'+fills.length+'">'+fills.join("")+"</fills>"+
+'<borders count="'+borders.length+'">'+borders.join("")+"</borders>"+
+'<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>'+
+'<cellXfs count="'+xfs.length+'">'+xfs.join("")+"</cellXfs>"+
+'<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>'+
+(S.dxfs.length?'<dxfs count="'+S.dxfs.length+'">'+S.dxfs.join("")+"</dxfs>":'<dxfs count="0"/>')+
+"</styleSheet>";}
+};
+return S;
+}
+function xlCfFormula(sh,rule,b){
+const top=addr(b.c1,b.r1);
+const t=(rule.test||"").trim();
+let ref;
+if(!t)ref=top;
+else{
+const m=t.match(/^(?:([A-Za-z_][A-Za-z0-9_ ]*)!)?\$?([A-Za-z]+)\$?(\d+)?$/);
+if(!m)return null;
+const pre=m[1]?qSheet(m[1].trim())+"!":"";
+ref=m[3]?pre+"$"+m[2].toUpperCase()+"$"+m[3]
+:pre+"$"+m[2].toUpperCase()+(b.r1+1);
+}
+const lit=v=>{
+const s=String(v==null?"":v);
+return isNum(s)&&s.trim()!==""?s.trim():'"'+s.replace(/"/g,'""')+'"';
+};
+switch(rule.op){
+case "between":{
+const lo=rule.lo===">="?">=":">",hi=rule.hi||"<=";
+return "AND("+ref+lo+lit(rule.v1)+","+ref+hi+lit(rule.v2)+")";
+}
+case "in":{
+const rb=cfBounds(sh,rule.v1||"");
+if(!rb)return null;
+const rng=(rb.sh!==sh?qSheet(rb.sh.name)+"!":"")+"$"+colName(rb.c1)+"$"+(rb.r1+1)+
+":$"+colName(rb.c2)+"$"+(rb.r2+1);
+return "COUNTIF("+rng+","+ref+")>0";
+}
+case "!=":return ref+"<>"+lit(rule.v1);
+case "==":return ref+"="+lit(rule.v1);
+default:return ref+rule.op+lit(rule.v1);
+}
+}
+function xlSheetXml(sh,S,dvNames){
+const rows=[];
+const byRow=new Map();
+for(const a in sh.cells){
+const m=/^([A-Z]+)(\d+)$/.exec(a);
+if(!m)continue;
+const r=+m[2]-1,c=colIdx(m[1]);
+if(c>=COLS||r>=ROWS)continue;
+if(!byRow.has(r))byRow.set(r,[]);
+byRow.get(r).push([c,a]);
+}
+for(const r of[...byRow.keys()].sort((x,y)=>x-y)){
+const cells=byRow.get(r).sort((x,y)=>x[0]-y[0]),out=[];
+for(const[c,a]of cells){
+const cl=sh.cells[a],f=cl.f||null;
+const s=S.xf(f),sa=s?' s="'+s+'"':"";
+const ref=colName(c)+(r+1);
+const raw=cl.v==null?"":String(cl.v);
+if(raw===""){if(s)out.push('<c r="'+ref+'"'+sa+"/>");continue;}
+if(raw[0]==="="){
+let v;try{v=getValue(sh,a,new Set());}catch(e){v="";}
+const bad=v&&typeof v==="object";
+const numeric=typeof v==="number"&&isFinite(v);
+out.push('<c r="'+ref+'"'+sa+(numeric?"":' t="str"')+"><f>"+xesc(xlFormula(raw))+"</f>"+
+(bad?"":"<v>"+xesc(numeric?v:String(v))+"</v>")+"</c>");
+continue;
+}
+const t=f&&f.type;
+if(t!=="text"&&t!=="date"&&isNum(raw)&&raw.trim()!=="")
+out.push('<c r="'+ref+'"'+sa+"><v>"+parseFloat(raw.trim())+"</v></c>");
+else
+out.push('<c r="'+ref+'"'+sa+' t="inlineStr"><is><t xml:space="preserve">'+xesc(raw)+"</t></is></c>");
+}
+if(!out.length)continue;
+const h=sh.rowH[r];
+rows.push('<row r="'+(r+1)+'"'+(h?' ht="'+(h*0.75).toFixed(2)+'" customHeight="1"':"")+">"+out.join("")+"</row>");
+}
+const cols=[];
+for(let c=0;c<COLS;c++)if(sh.colW[c])
+cols.push('<col min="'+(c+1)+'" max="'+(c+1)+'" width="'+((sh.colW[c]-5)/7).toFixed(2)+'" customWidth="1"/>');
+const dv=[];
+for(const[src,addrs]of dvGroups(sh)){
+const b=cfBounds(sh,src);
+if(!b)continue;
+const nm="_dv"+(dvNames.length+1);
+dvNames.push({name:nm,ref:qSheet(b.sh.name)+"!$"+colName(b.c1)+"$"+(b.r1+1)+":$"+colName(b.c2)+"$"+(b.r2+1)});
+dv.push('<dataValidation type="list" allowBlank="1" showInputMessage="1" showErrorMessage="1" sqref="'+
+addrs.join(" ")+'"><formula1>'+nm+"</formula1></dataValidation>");
+}
+const cf=[];
+let prio=1;
+for(const rule of sh.rules||[]){
+const b=cfBounds(sh,rule.range||"");
+if(!b||b.sh!==sh)continue;
+const f=cfFmt(sh,rule.fmt||"");
+if(!f||(!f.color&&!f.bg))continue;
+const fx=xlCfFormula(sh,rule,b);
+if(!fx)continue;
+cf.push('<conditionalFormatting sqref="'+colName(b.c1)+(b.r1+1)+":"+colName(b.c2)+(b.r2+1)+
+'"><cfRule type="expression" dxfId="'+S.dxf(f)+'" priority="'+(prio++)+'"><formula>'+
+xesc(fx)+"</formula></cfRule></conditionalFormatting>");
+}
+return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'+
+'<sheetFormatPr defaultRowHeight="16.5"/>'+
+(cols.length?"<cols>"+cols.join("")+"</cols>":"")+
+"<sheetData>"+rows.join("")+"</sheetData>"+
+cf.join("")+
+(dv.length?'<dataValidations count="'+dv.length+'">'+dv.join("")+"</dataValidations>":"")+
+"</worksheet>";
+}
+function exportXlsx(){
+const S=xlStyles(),dvNames=[],sheetXml=[];
+for(const sh of wb.sheets)sheetXml.push(xlSheetXml(sh,S,dvNames));
+const rels=wb.sheets.map((s,i)=>'<Relationship Id="rId'+(i+1)+
+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+(i+1)+'.xml"/>').join("");
+const sid=wb.sheets.length+1;
+const files=[
+{name:"[Content_Types].xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'+
+'<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'+
+'<Default Extension="xml" ContentType="application/xml"/>'+
+'<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+
+wb.sheets.map((s,i)=>'<Override PartName="/xl/worksheets/sheet'+(i+1)+
+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>').join("")+
+'<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'+
+"</Types>"},
+{name:"_rels/.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+
+'<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'+
+"</Relationships>"},
+{name:"xl/workbook.xml",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"'+
+' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+
+wb.sheets.map((s,i)=>'<sheet name="'+xesc(s.name)+'" sheetId="'+(i+1)+'" r:id="rId'+(i+1)+'"/>').join("")+
+"</sheets>"+(dvNames.length?"<definedNames>"+dvNames.map(d=>'<definedName name="'+d.name+'">'+
+xesc(d.ref)+"</definedName>").join("")+"</definedNames>":"")+"</workbook>"},
+{name:"xl/_rels/workbook.xml.rels",data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+
+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+rels+
+'<Relationship Id="rId'+sid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'+
+"</Relationships>"},
+];
+wb.sheets.forEach((s,i)=>files.push({name:"xl/worksheets/sheet"+(i+1)+".xml",data:sheetXml[i]}));
+files.push({name:"xl/styles.xml",data:S.xml()});
+const a=document.createElement("a");
+a.href=URL.createObjectURL(zipStore(files));
+a.download=safeName()+".xlsx";a.click();
+setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+/* ---------- XLSX import ---------- */
+const XL_MAXCOL=200,XL_MAXROW=5000;
+function zipEntries(u8){
+let e=-1;
+for(let i=u8.length-22;i>=0&&i>u8.length-22-65536;i--)
+if(u8[i]===80&&u8[i+1]===75&&u8[i+2]===5&&u8[i+3]===6){e=i;break;}
+if(e<0)throw"not a .xlsx file (no zip directory)";
+const dv=new DataView(u8.buffer,u8.byteOffset,u8.byteLength);
+const n=dv.getUint16(e+10,true);
+let p=dv.getUint32(e+16,true);
+const out=new Map(),dec=new TextDecoder();
+for(let i=0;i<n&&p+46<=u8.length;i++){
+if(dv.getUint32(p,true)!==0x02014b50)break;
+const method=dv.getUint16(p+10,true),csize=dv.getUint32(p+20,true);
+const nlen=dv.getUint16(p+28,true),elen=dv.getUint16(p+30,true),clen=dv.getUint16(p+32,true);
+const lho=dv.getUint32(p+42,true);
+const name=dec.decode(u8.subarray(p+46,p+46+nlen));
+const start=lho+30+dv.getUint16(lho+26,true)+dv.getUint16(lho+28,true);
+out.set(name,{method,data:u8.subarray(start,start+csize)});
+p+=46+nlen+elen+clen;
+}
+return out;
+}
+async function zipText(ent){
+if(!ent)return null;
+if(ent.method===0)return new TextDecoder().decode(ent.data);
+if(ent.method!==8)throw"unsupported zip compression";
+if(typeof DecompressionStream!=="function")throw"this browser cannot read compressed .xlsx";
+const st=new Blob([ent.data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+return new TextDecoder().decode(new Uint8Array(await new Response(st).arrayBuffer()));
+}
+const xparse=t=>new DOMParser().parseFromString(t,"application/xml");
+const els=(d,n)=>[...d.getElementsByTagNameNS("*",n)];
+const el1=(d,n)=>d.getElementsByTagNameNS("*",n)[0]||null;
+function xlTheme(txt){
+if(!txt)return[];
+try{
+const sc=el1(xparse(txt),"clrScheme");
+if(!sc)return[];
+const list=[...sc.children].map(n=>{
+const s=el1(n,"srgbClr");
+if(s)return"#"+s.getAttribute("val");
+const y=el1(n,"sysClr");
+return y?"#"+(y.getAttribute("lastClr")||"000000"):"#000000";
+});
+return list.length>=4?[list[1],list[0],list[3],list[2],...list.slice(4)]:list;
+}catch(e){return[];}
+}
+function xlTint(hex,t){
+if(!t)return hex;
+const ch=i=>parseInt(hex.slice(i,i+2),16);
+const ap=v=>t<0?v*(1+t):v*(1-t)+255*t;
+const h=v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,"0");
+return"#"+h(ap(ch(1)))+h(ap(ch(3)))+h(ap(ch(5)));
+}
+function xlColor(el,theme){
+if(!el)return"";
+const rgb=el.getAttribute("rgb");
+if(rgb)return"#"+rgb.slice(-6).toLowerCase();
+const th=el.getAttribute("theme");
+if(th!=null&&theme[+th])return xlTint(theme[+th],parseFloat(el.getAttribute("tint")||"0")).toLowerCase();
+return"";
+}
+const XL_DEC={1:0,2:2,3:0,4:2,9:0,10:2,37:0,38:0,39:2,40:2,43:2,44:2};
+function xlDecimals(id,custom){
+if(id==null)return null;
+const code=custom.get(String(id));
+if(code!=null){
+const c=code.replace(/\[[^\]]*\]/g,"").replace(/"[^"]*"/g,"");
+if(/[ymdhs]/i.test(c))return null;
+const m=/\.(0+)/.exec(c);
+return m?m[1].length:(/[0#]/.test(c)?0:null);
+}
+return XL_DEC[+id]!=null?XL_DEC[+id]:null;
+}
+function xlReadStyles(txt,themeTxt){
+if(!txt)return[];
+const d=xparse(txt),theme=xlTheme(themeTxt),custom=new Map();
+for(const f of els(d,"numFmt"))custom.set(f.getAttribute("numFmtId"),f.getAttribute("formatCode")||"");
+const kids=n=>{const e=el1(d,n);return e?[...e.children]:[];};
+const fonts=kids("fonts").map(f=>{
+const b=el1(f,"b"),bv=b&&b.getAttribute("val");
+return{color:xlColor(el1(f,"color"),theme),bold:!!b&&bv!=="0"&&bv!=="false"};
+});
+const fills=kids("fills").map(f=>{
+const p=el1(f,"patternFill");
+if(!p||(p.getAttribute("patternType")||"none")==="none")return"";
+return xlColor(el1(p,"fgColor"),theme);
+});
+const borders=kids("borders").map(b=>{
+const on=nm=>{const e=el1(b,nm),st=e&&e.getAttribute("style");return!!st&&st!=="none";};
+return(on("top")?BD_TOP:0)|(on("right")?BD_RIGHT:0)|(on("bottom")?BD_BOTTOM:0)|(on("left")?BD_LEFT:0);
+});
+const xfs=el1(d,"cellXfs");
+return(xfs?[...xfs.children]:[]).map(xf=>{
+const f={},g=n=>+(xf.getAttribute(n)||0),ap=n=>xf.getAttribute(n)==="1";
+const fo=fonts[g("fontId")];
+if(fo&&fo.color)f.color=fo.color;
+if(fo&&fo.bold)f.bold=true;
+const bg=fills[g("fillId")];if(bg)f.bg=bg;
+const b=borders[g("borderId")];if(b)f.b=b;
+const nf=xf.getAttribute("numFmtId");
+if(nf&&(+nf||ap("applyNumberFormat"))){const dc=xlDecimals(nf,custom);if(dc!=null)f.dec=dc;}
+return f;
+});
+}
+const XL_FNS=new Set(Object.keys(FNS));
+function xlImportFormula(src){
+let s=(src||"").trim();
+if(!s||s[0]==="=")s=s.replace(/^=/,"");
+if(!s)return null;
+if(/[{}\[\]]/.test(s))return null;
+if(/_xlfn\./i.test(s))return null;
+let bad=false;
+s=s.replace(/'([^']*)'!/g,(m,n)=>{
+if(!/^[A-Za-z_][A-Za-z0-9_ ]*$/.test(n)){bad=true;return m;}
+return n+"!";
+});
+if(bad)return null;
+for(const m of s.matchAll(/([A-Za-z_][A-Za-z0-9_.]*)\s*\(/g))
+if(!XL_FNS.has(m[1].toUpperCase()))return null;
+return"="+s;
+}
+function xlReadSheet(txt,name,styles,sst,names,stats){
+const d=xparse(txt),sh=newSheet(name);
+for(const c of els(d,"col")){
+const w=parseFloat(c.getAttribute("width")||"0");
+if(!w||c.getAttribute("customWidth")!=="1")continue;
+const px=Math.round(w*7+5);
+for(let i=+c.getAttribute("min");i<=Math.min(+c.getAttribute("max"),XL_MAXCOL);i++)sh.colW[i-1]=px;
+}
+for(const row of els(d,"row")){
+const r=+row.getAttribute("r")-1;
+if(!(r>=0))continue;
+if(r>=XL_MAXROW){stats.clipped=true;continue;}
+const ht=parseFloat(row.getAttribute("ht")||"0");
+if(ht&&row.getAttribute("customHeight")==="1")sh.rowH[r]=Math.round(ht/0.75);
+for(const c of els(row,"c")){
+const ref=c.getAttribute("r")||"";
+const m=/^([A-Z]+)(\d+)$/.exec(ref);
+if(!m)continue;
+const ci=colIdx(m[1]);
+if(ci>=XL_MAXCOL){stats.clipped=true;continue;}
+const t=c.getAttribute("t")||"n";
+const fEl=el1(c,"f"),vEl=el1(c,"v"),isEl=el1(c,"is");
+let raw="",text=false;
+if(t==="s"){const i=+(vEl?vEl.textContent:-1);raw=sst[i]!=null?sst[i]:"";text=true;}
+else if(t==="inlineStr"){raw=isEl?els(isEl,"t").map(x=>x.textContent).join(""):"";text=true;}
+else if(t==="str"){raw=vEl?vEl.textContent:"";text=true;}
+else if(t==="b"){raw=(vEl&&vEl.textContent==="1")?"TRUE":"FALSE";}
+else if(t==="e"){raw=vEl?vEl.textContent:"#ERR";text=true;}
+else raw=vEl?vEl.textContent:"";
+let formula=null;
+if(fEl&&!fEl.getAttribute("t")){
+formula=xlImportFormula(fEl.textContent);
+if(!formula&&fEl.textContent.trim())stats.dropped++;
+}else if(fEl)stats.dropped++;
+const st=styles[+(c.getAttribute("s")||0)];
+const f=st?{...st}:{};
+if(text&&!formula&&isNum(raw)&&raw.trim()!=="")f.type="text";
+if(formula==null&&raw==="" &&!Object.keys(f).length)continue;
+const cl={};
+if(formula)cl.v=formula;else if(raw!=="")cl.v=raw;
+if(Object.keys(f).length)cl.f=f;
+if(cl.v===undefined&&!cl.f)continue;
+sh.cells[colName(ci)+(r+1)]=cl;
+stats.maxC=Math.max(stats.maxC,ci);stats.maxR=Math.max(stats.maxR,r);
+}
+}
+for(const dvEl of els(d,"dataValidation")){
+if((dvEl.getAttribute("type")||"")!=="list")continue;
+const f1=el1(dvEl,"formula1");
+let src=(f1?f1.textContent:"").trim();
+if(!src||src[0]==='"'){stats.dropped++;continue;}
+if(names.has(src))src=names.get(src);
+src=src.replace(/\$/g,"").replace(/'([^']*)'!/g,"$1!");
+if(!/^(?:[^!]+!)?[A-Z]+\d+(?::[A-Z]+\d+)?$/.test(src)){stats.dropped++;continue;}
+for(const part of(dvEl.getAttribute("sqref")||"").split(/\s+/)){
+const rm=/^([A-Z]+)(\d+)(?::([A-Z]+)(\d+))?$/.exec(part);
+if(!rm)continue;
+const c1=colIdx(rm[1]),r1=+rm[2]-1,c2=rm[3]?colIdx(rm[3]):c1,r2=rm[4]?+rm[4]-1:r1;
+for(let r=r1;r<=Math.min(r2,XL_MAXROW-1);r++)for(let c=c1;c<=Math.min(c2,XL_MAXCOL-1);c++){
+const a=colName(c)+(r+1);
+(sh.cells[a]=sh.cells[a]||{}).f=Object.assign(sh.cells[a].f||{},{dv:src});
+stats.maxC=Math.max(stats.maxC,c);stats.maxR=Math.max(stats.maxR,r);
+}
+}
+}
+if(els(d,"conditionalFormatting").length)stats.cf=true;
+if(els(d,"mergeCell").length)stats.merged=true;
+return sh;
+}
+async function importXlsx(file){
+const zip=zipEntries(new Uint8Array(await file.arrayBuffer()));
+const get=n=>zipText(zip.get(n));
+const wbTxt=await get("xl/workbook.xml");
+if(!wbTxt)throw"not a .xlsx workbook";
+const relTxt=await get("xl/_rels/workbook.xml.rels");
+const rels=new Map();
+if(relTxt)for(const r of els(xparse(relTxt),"Relationship"))
+rels.set(r.getAttribute("Id"),r.getAttribute("Target").replace(/^\/?(xl\/)?/,""));
+const sstTxt=await get("xl/sharedStrings.xml");
+const sst=sstTxt?els(xparse(sstTxt),"si").map(si=>els(si,"t").map(t=>t.textContent).join("")):[];
+const styles=xlReadStyles(await get("xl/styles.xml"),await get("xl/theme/theme1.xml"));
+const wbDoc=xparse(wbTxt);
+const names=new Map();
+for(const n of els(wbDoc,"definedName"))names.set(n.getAttribute("name"),n.textContent.trim());
+const stats={dropped:0,maxC:0,maxR:0,cf:false,merged:false,clipped:false};
+const sheets=[];
+let i=0;
+for(const s of els(wbDoc,"sheet")){
+i++;
+const rid=s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");
+const path="xl/"+(rels.get(rid)||"worksheets/sheet"+i+".xml");
+const txt=await get(path);
+if(!txt)continue;
+sheets.push(xlReadSheet(txt,s.getAttribute("name")||"Sheet"+i,styles,sst,names,stats));
+}
+if(!sheets.length)throw"no readable sheets in this file";
+return{wb:{name:file.name.replace(/\.xlsx$/i,"")||"Simple xlsx",sheets,active:0},stats};
+}
+function xlSummary(st){
+const bits=[];
+if(st.dropped)bits.push(st.dropped+" formula"+(st.dropped===1?"":"s")+" replaced by their last value");
+if(st.cf)bits.push("conditional formatting dropped");
+if(st.merged)bits.push("merged cells dropped");
+if(st.clipped)bits.push("clipped to "+XL_MAXCOL+" columns / "+XL_MAXROW+" rows");
+return bits.length?"Imported, with changes:\n• "+bits.join("\n• "):"";
+}
+$("loadXlsx").onclick=()=>$("xlsxFile").click();
+$("xlsxFile").addEventListener("change",async e=>{
+const file=e.target.files&&e.target.files[0];
+e.target.value="";
+if(!file)return;
+if(!confirm("Replace everything in this window with \""+file.name+"\"?"))return;
+try{
+const{wb:nw,stats}=await importXlsx(file);
+wb=nw;
+COLS=Math.max(26,Math.min(XL_MAXCOL,stats.maxC+2));
+ROWS=Math.max(100,Math.min(XL_MAXROW,stats.maxR+20));
+if(!wb.name)wb.name="Simple xlsx";
+$("appname").textContent=wb.name;applyName();
+sel={r:0,c:0};selEnd=null;clip=null;
+buildGrid();renderTabs();save();
+const msg=xlSummary(stats);
+if(msg)alert(msg);
+}catch(err){
+alert("Could not read that file.\n"+(err&&err.message?err.message:err));
+}
+});
+$("saveXlsx").onclick=()=>{exportXlsx();focusGrid(true);};
+/* ---------- persistence & export ---------- */
+/* ---------- undo / redo ---------- */
+const undoStack=[],redoStack=[],UNDO_MAX=100;
+let lastSnap=null,restoring=false;
+function snapshot(json){return{json:json!=null?json:JSON.stringify(wb),cols:COLS,rows:ROWS,sel:{...sel},selEnd:selEnd?{...selEnd}:null};}
+function restoreSnap(s){
+wb=JSON.parse(s.json);COLS=s.cols;ROWS=s.rows;
+sel={...s.sel};selEnd=s.selEnd?{...s.selEnd}:null;clampSel();
+clip=null;lastSnap=s;
+if(!wb.name)wb.name="Simple xlsx";
+$("appname").textContent=wb.name;applyName();
+restoring=true;
+buildGrid();renderTabs();save();
+restoring=false;
+}
+function undo(){if(!undoStack.length)return;redoStack.push(lastSnap);restoreSnap(undoStack.pop());}
+function redo(){if(!redoStack.length)return;undoStack.push(lastSnap);restoreSnap(redoStack.pop());}
+function save(){
+const json=JSON.stringify(wb);
+if(!restoring&&lastSnap&&json!==lastSnap.json){
+undoStack.push(lastSnap);
+if(undoStack.length>UNDO_MAX)undoStack.shift();
+redoStack.length=0;
+lastSnap=snapshot(json);
+}
+try{localStorage.setItem("gridfile",json);}catch(e){}
+}
+function fitRows(){
+let maxR=0,maxC=0;
+for(const sh of wb.sheets)for(const a in sh.cells){
+const m=a.match(/^([A-Z]+)(\d+)$/);
+if(!m)continue;
+maxR=Math.max(maxR,+m[2]);maxC=Math.max(maxC,colIdx(m[1])+1);
+}
+while(ROWS<maxR+20)ROWS+=100;
+if(COLS<maxC)COLS=maxC;
+}
+function normalize(){
+if(!(wb.active>=0&&wb.active<wb.sheets.length))wb.active=0;
+for(const sh of wb.sheets){
+sh.colW=sh.colW||{};sh.rowH=sh.rowH||{};
+sh.rules=(sh.rules||[]).map(r=>{
+if(r.range)return r;
+const col=colName(r.col||0);
+return r.op==="in"
+?{range:col+"1:"+col+ROWS,op:"in",v1:r.src||"",fmt:r.fmt||""}
+:{range:col+"1:"+col+ROWS,op:"==",v1:r.value!=null?r.value:"",fmt:r.fmt||""};
+});
+}
+}
+function load(){
+const emb=$("gfdata").textContent.trim();
+if(emb){try{const w=JSON.parse(emb);if(w&&w.sheets){wb=w;return;}}catch(e){}}
+try{const s=localStorage.getItem("gridfile");if(s){const w=JSON.parse(s);if(w&&w.sheets)wb=w;}}catch(e){}
+}
+function pageHtml(){
+const json=JSON.stringify(wb).replace(/</g,"\\u003c");
+let html=PRISTINE.replace(/(<script id="gfdata"[^>]*>)[\s\S]*?(<\/script>)/,(m,a,b)=>a+json+b);
+const esc=safeName().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+return html.replace(/<title>[\s\S]*?<\/title>/,"<title>"+esc+"</title>")
+.replace(/(<span id="appname"[^>]*>)[\s\S]*?(<\/span>)/,(m,a,b)=>a+esc+b);
+}
+function downloadHtml(){
+const b=new Blob([pageHtml()],{type:"text/html"});
+const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=safeName()+".html";a.click();
+}
+$("saveHtml").onclick=()=>{
+if(!confirm("Download this spreadsheet as a self-contained HTML file?"))return;
+downloadHtml();
+};
+/* ---------- save in place ---------- */
+const canSaveInPlace=()=>location.protocol==="file:"&&typeof window.showSaveFilePicker==="function";
+let fileHandle=null;
+function idbHandle(fn,ms){
+return Promise.race([
+new Promise((res,rej)=>{
+if(!self.indexedDB)return rej(new Error("no indexedDB"));
+const rq=indexedDB.open("gridfile",1);
+rq.onupgradeneeded=()=>rq.result.createObjectStore("h");
+rq.onerror=()=>rej(rq.error);
+rq.onblocked=()=>rej(new Error("blocked"));
+rq.onsuccess=()=>{
+try{
+const tx=rq.result.transaction("h","readwrite"),q=fn(tx.objectStore("h"));
+q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);
+}catch(err){rej(err);}
+};
+}),
+new Promise((res,rej)=>setTimeout(()=>rej(new Error("timeout")),ms||500))
+]);
+}
+function savetip(msg){
+const t=$("savetip");
+t.textContent=msg;t.style.display="block";
+clearTimeout(savetip.t);savetip.t=setTimeout(()=>{t.style.display="none";},1800);
+}
+async function saveInPlace(){
+let h=fileHandle;
+if(!h)try{h=await idbHandle(st=>st.get("file"));}catch(err){}
+if(h){
+const opt={mode:"readwrite"};
+let p=await h.queryPermission(opt);
+if(p!=="granted")p=await h.requestPermission(opt);
+if(p!=="granted")h=null;
+}
+if(!h)h=await window.showSaveFilePicker({suggestedName:safeName()+".html",
+types:[{description:"HTML page",accept:{"text/html":[".html"]}}]});
+const w=await h.createWritable();
+await w.write(pageHtml());
+await w.close();
+fileHandle=h;
+idbHandle(st=>st.put(h,"file")).catch(()=>{});
+return h.name;
+}
+$("pasteAll").onclick=()=>{if(clip){pasteInternal("all");focusGrid(true);}};
+$("pasteVals").onclick=()=>{if(clip){pasteInternal("values");focusGrid(true);}};
+$("pasteFmt").onclick=()=>{if(clip){pasteInternal("format");focusGrid(true);}};
+/* ---------- row / column insert & delete ---------- */
+function rewriteRefs(target,isCol,at){
+const rwFor=owner=>str=>str.replace(REF_RE,(m,shn,d1,c1,d2,r1,d3,c2,d4,r2)=>{
+const onTarget=shn?sheetByName(shn.trim())===target:owner===target;
+if(!onTarget)return m;
+const idx=(col,row)=>isCol?colIdx(col):+row-1;
+const put=(dl,col,dlr,row,i)=>isCol?dl+colName(i)+dlr+row:dl+col+dlr+(i+1);
+const e1=idx(c1,r1),e2=c2?idx(c2,r2):null;
+const a1=at(e1),a2=c2?at(e2):undefined;
+if(!c2)return a1===null?"#REF":(shn?shn+"!":"")+put(d1,c1,d2,r1,a1);
+if(a1===null&&a2===null)return "#REF";
+const surv=[];
+for(let i=Math.min(e1,e2);i<=Math.max(e1,e2);i++){const t=at(i);if(t!=null)surv.push(t);}
+if(!surv.length)return "#REF";
+const lo=Math.min(...surv),hi=Math.max(...surv);
+return(shn?shn+"!":"")+put(d1,c1,d2,r1,lo)+":"+put(d3,c2,d4,r2,hi);
+});
+for(const s of wb.sheets){
+const rw=rwFor(s);
+for(const a in s.cells){
+const cl=s.cells[a];
+if(typeof cl.v==="string"&&cl.v[0]==="=")cl.v=rw(cl.v);
+if(cl.f&&cl.f.dv)cl.f.dv=rw(cl.f.dv);
+}
+for(const rule of s.rules||[]){
+if(rule.range)rule.range=rw(rule.range);
+if(rule.fmt)rule.fmt=rw(rule.fmt);
+if(rule.op==="in"&&rule.v1)rule.v1=rw(rule.v1);
+if(rule.test){
+const bare=rule.test.match(/^(?:([A-Za-z_][A-Za-z0-9_ ]*)!)?([A-Za-z]+)$/);
+if(!bare)rule.test=rw(rule.test);
+else if(isCol&&(bare[1]?sheetByName(bare[1].trim()):s)===target){
+const i=at(colIdx(bare[2]));
+rule.test=i==null?"#REF":(bare[1]?bare[1]+"!":"")+colName(i);
+}
+}
+}
+}
+}
+function shiftRefs(target,start,n,isCol){
+rewriteRefs(target,isCol,i=>{
+if(n>0)return i>=start?i+n:i;
+const d=-n;
+if(i>=start+d)return i+n;
+return i>=start?null:i;
+});
+}
+function remap(sh,fn,isCol){
+const cells={},sizes={};
+const old=isCol?sh.colW:sh.rowH;
+for(const a in sh.cells){
+const m=a.match(/^([A-Z]+)(\d+)$/);
+if(isCol){const c=fn(colIdx(m[1]));if(c!=null)cells[colName(c)+m[2]]=sh.cells[a];}
+else{const r=fn(+m[2]-1);if(r!=null)cells[m[1]+(r+1)]=sh.cells[a];}
+}
+for(const k in old){const i=fn(+k);if(i!=null)sizes[i]=old[k];}
+sh.cells=cells;
+if(isCol)sh.colW=sizes;else sh.rowH=sizes;
+}
+function clampSel(){
+sel={c:Math.min(COLS-1,Math.max(0,sel.c)),r:Math.min(ROWS-1,Math.max(0,sel.r))};
+if(selEnd)selEnd={c:Math.min(COLS-1,Math.max(0,selEnd.c)),r:Math.min(ROWS-1,Math.max(0,selEnd.r))};
+}
+function insertAt(start,n,isCol){
+const sh=sheet();
+remap(sh,i=>i>=start?i+n:i,isCol);
+shiftRefs(sh,start,n,isCol);
+if(isCol)COLS+=n;else ROWS+=n;
+clip=null;clampSel();
+buildGrid();save();
+}
+function deleteAt(start,n,isCol){
+const sh=sheet();
+remap(sh,i=>i>=start+n?i-n:(i>=start?null:i),isCol);
+shiftRefs(sh,start,-n,isCol);
+if(isCol)COLS=Math.max(1,COLS-n);else ROWS=Math.max(1,ROWS-n);
+clip=null;clampSel();
+buildGrid();save();
+}
+function movePerm(N,from,count,to){
+const order=[...Array(N).keys()];
+const block=order.splice(from,count);
+const ins=order.filter(i=>i<to).length;
+order.splice(ins,0,...block);
+const map=new Array(N);
+order.forEach((old,now)=>map[old]=now);
+return map;
+}
+function moveBlock(from,count,to,isCol){
+if(to>=from&&to<=from+count)return;
+const sh=sheet(),N=isCol?COLS:ROWS;
+const map=movePerm(N,from,count,to);
+remap(sh,i=>i<N?map[i]:i,isCol);
+rewriteRefs(sh,isCol,i=>i<N?map[i]:i);
+clip=null;
+const a=map[from],b=map[from+count-1];
+if(isCol){sel={c:Math.min(a,b),r:0};selEnd={c:Math.max(a,b),r:ROWS-1};}
+else{sel={c:0,r:Math.min(a,b)};selEnd={c:COLS-1,r:Math.max(a,b)};}
+buildGrid();save();
+}
+function fullRows(){const R=selRect();return R.c1===0&&R.c2===COLS-1?R:null;}
+function fullCols(){const R=selRect();return R.r1===0&&R.r2===ROWS-1?R:null;}
+function axisSel(){
+const R=fullRows();if(R)return{isCol:false,a:R.r1,b:R.r2};
+const C=fullCols();if(C)return{isCol:true,a:C.c1,b:C.c2};
+return null;
+}
+$("rcBefore").onclick=()=>{const A=axisSel();if(A)insertAt(A.a,A.b-A.a+1,A.isCol);};
+$("rcAfter").onclick=()=>{const A=axisSel();if(A)insertAt(A.b+1,A.b-A.a+1,A.isCol);};
+$("rcDel").onclick=()=>{const A=axisSel();if(A)deleteAt(A.a,A.b-A.a+1,A.isCol);};
+/* ---------- dropdown UI ---------- */
+const dvpanel=$("dvpanel");
+function dvGroups(sh){
+const g=new Map();
+for(const a in sh.cells){
+const f=sh.cells[a].f;
+if(!f||!f.dv)continue;
+if(!g.has(f.dv))g.set(f.dv,[]);
+g.get(f.dv).push(a);
+}
+return g;
+}
+function dvCells(sh){let n=0;for(const a in sh.cells){const f=sh.cells[a].f;if(f&&f.dv)n++;}return n;}
+function dvSync(){
+let total=0;const parts=[];
+for(const sh of wb.sheets){
+const n=dvGroups(sh).size;
+total+=n;
+if(n)parts.push(sh.name+": "+n+" ("+dvCells(sh)+" cells)");
+}
+$("dvCount").textContent=total;
+$("dvWord").textContent=total===1?"Dropdown":"Dropdowns";
+$("dvOpen").title=parts.length?"Dropdowns — "+parts.join(", ")
+:"No dropdowns in this workbook";
+}
+function dvClose(){dvpanel.hidden=true;dvpanel.innerHTML="";clearRefs();}
+function dvOpenPanel(){
+if(MOB.matches)closeSheet();
+dvpanel.hidden=false;
+dvRenderPanel();
+const b=$("dvOpen").getBoundingClientRect();
+dvpanel.style.left=Math.round(Math.max(8,Math.min(b.left,innerWidth-dvpanel.offsetWidth-8)))+"px";
+dvpanel.style.top=Math.round(b.bottom+6)+"px";
+}
+function dvSpan(list){
+let c1=1e9,c2=-1,r1=1e9,r2=-1;
+for(const a of list){
+const m=a.match(/^([A-Z]+)(\d+)$/),c=colIdx(m[1]),r=+m[2]-1;
+c1=Math.min(c1,c);c2=Math.max(c2,c);r1=Math.min(r1,r);r2=Math.max(r2,r);
+}
+return c1===c2&&r1===r2?addr(c1,r1):addr(c1,r1)+":"+addr(c2,r2);
+}
+function dvRenderPanel(){
+const sh=sheet();
+dvpanel.innerHTML="";
+const head=document.createElement("div");head.id="dvhead";
+const t=document.createElement("b");t.textContent="Dropdowns";
+const hint=document.createElement("span");hint.className="hint";
+hint.textContent="click a field, then click or drag on the grid to pick";
+const x=document.createElement("button");x.textContent="Close";x.onclick=dvClose;
+head.append(t,hint,x);
+const body=document.createElement("div");body.id="dvbody";
+let any=false;
+for(const[si,shx]of wb.sheets.entries()){
+const groups=dvGroups(shx);
+if(!groups.size)continue;
+any=true;
+if(wb.sheets.length>1){
+const h=document.createElement("div");h.className="shhead";h.textContent=shx.name;
+body.appendChild(h);
+}
+for(const[src,list]of groups){
+const row=document.createElement("div");row.className="cfrow";
+const ok=!!cfBounds(shx,src);
+const desc=document.createElement("span");desc.className="desc grow";desc.style.fontSize="12px";
+desc.textContent=dvSpan(list)+"  ("+list.length+(list.length===1?" cell":" cells")+")  →  "+src;
+const go=document.createElement("button");go.textContent="Select";go.title="Select these cells";
+go.onclick=()=>{
+const m=dvSpan(list).split(":");
+const A=resolveRef(m[0],shx),B=resolveRef(m[1]||m[0],shx);
+if(si!==wb.active){wb.active=si;buildGrid();renderTabs();}
+sel={c:A.c,r:A.r};selEnd=(m[1]?{c:B.c,r:B.r}:null);
+paintSelection();
+};
+const del=document.createElement("button");del.textContent="✕";del.title="Remove these dropdowns";
+del.onclick=()=>{
+for(const a of list){const f=shx.cells[a]&&shx.cells[a].f;if(f)delete f.dv;}
+paintAll();save();dvSync();dvRenderPanel();
+};
+row.append(desc);
+if(!ok)row.append(Object.assign(document.createElement("span"),{className:"bad",textContent:"bad source"}));
+row.append(go,del);
+body.appendChild(row);
+}
+}
+if(!any){
+const e=document.createElement("div");e.className="cfrow";
+e.style.color="var(--ink-soft)";e.style.fontSize="12px";
+e.textContent="No dropdowns in this workbook. Define one below.";
+body.appendChild(e);
+}
+const foot=document.createElement("div");foot.id="dvfoot";
+const mk=(tag,cls,props)=>Object.assign(document.createElement(tag),props||{},cls?{className:cls}:{});
+const tgt=mk("input","rng");tgt.type="text";tgt.placeholder="C2:C40";tgt.value=cfDefaultRange();
+tgt.dataset.pick="range";tgt.title="Cells that get the dropdown";
+const src=mk("input","rng");src.type="text";src.placeholder="Data!A2:A12";
+src.dataset.pick="range";src.title="Range holding the allowed values";
+const apply=mk("button",null,{textContent:"Apply"});
+apply.onclick=()=>{
+const T=cfBounds(sh,tgt.value.trim()),S=src.value.trim();
+if(!T){alert("Pick the cells to put the dropdown in.");return;}
+if(!cfBounds(sh,S)){alert("Source must be a range like Data!A2:A12.");return;}
+for(let r=T.r1;r<=T.r2;r++)for(let c=T.c1;c<=T.c2;c++)(ensure(T.sh,addr(c,r)).f??={}).dv=S;
+paintAll();save();dvSync();dvRenderPanel();
+};
+const rem=mk("button",null,{textContent:"Remove"});
+rem.title="Remove dropdowns from the target range";
+rem.onclick=()=>{
+const T=cfBounds(sh,tgt.value.trim());
+if(!T)return;
+for(let r=T.r1;r<=T.r2;r++)for(let c=T.c1;c<=T.c2;c++){
+const cl=cell(T.sh,addr(c,r));if(cl&&cl.f)delete cl.f.dv;
+}
+paintAll();save();dvSync();dvRenderPanel();
+};
+foot.append(mk("span","lbl",{textContent:"cells"}),tgt,
+mk("span","lbl",{textContent:"choose from"}),src,apply,rem);
+dvpanel.append(head,body,foot);
+paintRefs();
+}
+$("dvOpen").onclick=()=>{if(dvpanel.hidden)dvOpenPanel();else dvClose();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!dvpanel.hidden&&!refTarget())dvClose();});
+/* ---------- conditional format UI ---------- */
+const cfpanel=$("cfpanel");
+function cfCount(){return(sheet().rules||[]).length;}
+function cfSync(){
+let total=0;const parts=[];
+for(const sh of wb.sheets){const n=(sh.rules||[]).length;total+=n;if(n)parts.push(sh.name+": "+n);}
+$("cfCount").textContent=total;
+$("cfOpen").title=parts.length?"Conditional format rules — "+parts.join(", ")
+:"No conditional formatting in this workbook";
+}
+function cfChanged(){paintAll();save();cfSync();}
+function cfDefaultRange(){
+const R=selRect();
+return R.c1===R.c2&&R.r1===R.r2?addr(R.c1,R.r1):addr(R.c1,R.r1)+":"+addr(R.c2,R.r2);
+}
+function cfClose(){cfpanel.hidden=true;cfpanel.innerHTML="";clearRefs();}
+function cfOpen(){
+if(MOB.matches)closeSheet();
+cfpanel.hidden=false;
+cfRenderPanel();
+const b=$("cfOpen").getBoundingClientRect();
+cfpanel.style.left=Math.round(Math.max(8,Math.min(b.left,innerWidth-cfpanel.offsetWidth-8)))+"px";
+cfpanel.style.top=Math.round(b.bottom+6)+"px";
+}
+function cfRow(rule,i,sh){
+const row=document.createElement("div");row.className="cfrow";
+const mk=(tag,cls,props)=>Object.assign(document.createElement(tag),props||{},cls?{className:cls}:{});
+const upd=()=>cfChanged();
+const prev=mk("span","prev");
+const f=cfFmt(sh,rule.fmt||"");
+prev.style.background=f&&f.bg||"#fff";prev.style.color=f&&f.color||"";
+prev.textContent=f&&f.color?"A":"";
+prev.title=f?"Preview of "+rule.fmt:"Exemplar not found";
+const rng=mk("input","rng");rng.type="text";rng.value=rule.range||"";rng.placeholder="B1:M100";
+rng.dataset.pick="range";rng.title="Cells this rule paints — click or drag on the grid to pick";
+rng.oninput=()=>{rule.range=rng.value.trim();upd();};
+const tst=mk("input","tst");tst.type="text";tst.value=rule.test||"";tst.placeholder="K";
+tst.dataset.pick="test";
+tst.title="What to examine: a column letter (same row), a cell like K2, or blank for each painted cell";
+tst.oninput=()=>{rule.test=tst.value.trim();upd();};
+const op=mk("select");
+for(const[v,label]of CF_OPS)op.append(new Option(label,v));
+op.value=rule.op||"==";
+op.onchange=()=>{rule.op=op.value;cfChanged();cfRenderPanel();};
+const v1=mk("input",rule.op==="in"?"rng":"val");v1.type="text";v1.value=rule.v1!=null?rule.v1:"";
+v1.placeholder=rule.op==="in"?"L2:L9":(rule.op==="between"?"low":"value");
+if(rule.op==="in")v1.dataset.pick="range";
+v1.oninput=()=>{rule.v1=v1.value;upd();};
+const fmt=mk("input","fmt");fmt.type="text";fmt.value=rule.fmt||"";fmt.placeholder="F3";
+fmt.dataset.pick="cell";fmt.title="Cell whose colors this rule copies — click a cell to pick it";
+fmt.oninput=()=>{rule.fmt=fmt.value.trim();cfChanged();prev.replaceWith(cfRowPreview(rule,sh,prev));};
+const del=mk("button");del.textContent="✕";del.title="Delete rule";
+del.onclick=()=>{sh.rules.splice(i,1);cfChanged();cfRenderPanel();};
+row.append(mk("span","lbl",{textContent:"if"}),tst,op,v1);
+if(rule.op==="between"){
+const lo=mk("select");lo.append(new Option("<","<"),new Option("≤","<="));lo.value=rule.lo||">";
+lo.value=rule.lo===">="?"<=":"<";
+lo.onchange=()=>{rule.lo=lo.value==="<="?">=":">";upd();};
+const cellLbl=mk("span","lbl",{textContent:"value"});
+const hi=mk("select");hi.append(new Option("<","<"),new Option("≤","<="));hi.value=rule.hi||"<=";
+hi.onchange=()=>{rule.hi=hi.value;upd();};
+const v2=mk("input","val");v2.type="text";v2.value=rule.v2!=null?rule.v2:"";v2.placeholder="high";
+v2.oninput=()=>{rule.v2=v2.value;upd();};
+row.append(lo,cellLbl,hi,v2);
+}
+row.append(mk("span","lbl",{textContent:"paint"}),rng,mk("span","lbl",{textContent:"like"}),fmt,prev);
+if(!cfBounds(sh,rule.range||""))row.append(mk("span","bad",{textContent:"bad range"}));
+else if(rule.test&&rule.test.trim()&&!cfTestRef(sh,rule.test))row.append(mk("span","bad",{textContent:"bad test ref"}));
+else if(!f)row.append(mk("span","bad",{textContent:"no such cell"}));
+row.append(mk("span","grow"),del);
+return row;
+}
+function cfRowPreview(rule,sh,old){
+const f=cfFmt(sh,rule.fmt||"");
+const prev=document.createElement("span");prev.className="prev";
+prev.style.background=f&&f.bg||"#fff";prev.style.color=f&&f.color||"";
+prev.textContent=f&&f.color?"A":"";
+return prev;
+}
+function cfRenderPanel(){
+const sh=sheet();sh.rules=sh.rules||[];
+cfpanel.innerHTML="";
+const head=document.createElement("div");head.id="cfhead";
+const t=document.createElement("b");t.textContent="Conditional formatting";
+const hint=document.createElement("span");hint.className="hint";
+hint.textContent="click a field, then click the grid (or a column header) to pick";
+const x=document.createElement("button");x.textContent="Close";x.onclick=cfClose;
+head.append(t,hint,x);
+const body=document.createElement("div");body.id="cfbody";
+let any=false;
+for(const shx of wb.sheets){
+shx.rules=shx.rules||[];
+if(!shx.rules.length)continue;
+any=true;
+if(wb.sheets.length>1){
+const h=document.createElement("div");h.className="shhead";h.textContent=shx.name;
+body.appendChild(h);
+}
+shx.rules.forEach((r,i)=>body.appendChild(cfRow(r,i,shx)));
+}
+if(!any){
+const e=document.createElement("div");e.className="cfrow";
+e.style.color="var(--ink-soft)";e.style.fontSize="12px";
+e.textContent="No rules yet. Add one below.";
+body.appendChild(e);
+}
+const foot=document.createElement("div");foot.id="cffoot";
+const add=document.createElement("button");add.textContent="+ Add rule";
+add.onclick=()=>{
+sh.rules.push({range:cfDefaultRange(),test:"",op:"==",v1:"",fmt:""});
+cfChanged();cfRenderPanel();
+};
+const note=document.createElement("span");note.className="hint";
+note.textContent="added to "+sheet().name+" · first matching rule wins · a rule overrides the cell's own colors";
+foot.append(add,note);
+cfpanel.append(head,body,foot);
+paintRefs();
+}
+$("cfOpen").onclick=()=>{if(cfpanel.hidden)cfOpen();else cfClose();};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!cfpanel.hidden&&!refTarget())cfClose();});
+document.addEventListener("mousedown",e=>{
+if(refTarget())return;
+const t=e.target,outside=(panel,btn)=>!panel.contains(t)&&t!==btn&&!btn.contains(t);
+if(!dvpanel.hidden&&outside(dvpanel,$("dvOpen")))dvClose();
+if(!cfpanel.hidden&&outside(cfpanel,$("cfOpen")))cfClose();
+},true);
+/* ---------- document name ---------- */
+function safeName(){return(wb.name||"Simple xlsx").replace(/[\\/:*?"<>|]/g,"-").trim()||"Simple xlsx";}
+function applyName(){document.title=wb.name||"Simple xlsx";}
+function renameFromUI(){
+const n=$("appname").textContent.replace(/\s+/g," ").trim();
+wb.name=n||"Simple xlsx";
+applyName();save();
+}
+$("appname").addEventListener("input",renameFromUI);
+$("appname").addEventListener("blur",()=>{$("appname").textContent=wb.name||"Simple xlsx";});
+$("appname").addEventListener("keydown",e=>{
+if(e.key==="Enter"){e.preventDefault();$("appname").blur();focusGrid(true);}
+else if(e.key==="Escape"){e.preventDefault();$("appname").textContent=wb.name||"Simple xlsx";$("appname").blur();focusGrid(true);}
+});
+/* ---------- phone layout ---------- */
+const MOB=matchMedia("(max-width:897px)");
+let msEl=null,msAt=null,msIn=null;
+function putBack(){
+if(msEl)msIn.insertBefore(msEl,msAt);
+msEl=msAt=msIn=null;
+}
+function closeSheet(){
+putBack();
+$("msheet").hidden=$("mscrim").hidden=true;
+}
+function openSheet(el,title){
+closeSheet();hideMenu();
+msEl=el;msIn=el.parentNode;msAt=el.nextSibling;
+$("msbody").appendChild(el);
+$("mshead").firstChild.textContent=title;
+$("msheet").hidden=$("mscrim").hidden=false;
+}
+$("mshx").onclick=closeSheet;
+$("mscrim").onclick=closeSheet;
+(()=>{
+const strip=$("mstrip");
+for(const g of document.querySelectorAll("#toolbar .grp[data-ic]")){
+const name=g.querySelector(".glabel").textContent;
+const b=document.createElement("button");
+b.innerHTML='<span></span><span class="lb"></span>';
+b.firstChild.textContent=g.dataset.ic;
+b.lastChild.textContent=name;
+b.title=name;
+b.onclick=()=>openSheet(g,name);
+strip.appendChild(b);
+}
+})();
+$("movf").onclick=()=>openSheet($("toolbar").querySelector(".grp.right"),"File");
+$("tglbar").onclick=()=>openSheet($("tabs"),"Sheets");
+function hideMenu(){$("mmenu").hidden=true;}
+function showMenu(x,y,ids){
+const m=$("mmenu");
+m.textContent="";
+let any=false;
+for(const id of ids){
+const src=$(id);
+const b=document.createElement("button");
+b.textContent=src.textContent;
+b.disabled=src.disabled;
+if(!src.disabled)any=true;
+b.onclick=()=>{hideMenu();src.click();};
+m.appendChild(b);
+}
+if(!any)return;
+m.hidden=false;
+const w=m.offsetWidth,h=m.offsetHeight;
+m.style.left=Math.round(Math.max(6,Math.min(x,innerWidth-w-6)))+"px";
+m.style.top=Math.round(Math.max(6,Math.min(y,innerHeight-h-6)))+"px";
+}
+$("gridwrap").addEventListener("pointerdown",e=>{
+if(!MOB.matches||e.pointerType==="mouse"||editing)return;
+const th=e.target.closest("th"),td=e.target.closest("td");
+if(!th&&!td)return;
+const x0=e.clientX,y0=e.clientY;
+const t=setTimeout(()=>{
+off();
+if(th){
+const cs=th.dataset.c,rs=th.dataset.r;
+if(cs===undefined&&rs===undefined)return;
+selectBand(cs!==undefined,+(cs!==undefined?cs:rs),+(cs!==undefined?cs:rs));
+showMenu(x0,y0,["rcBefore","rcAfter","rcDel"]);
+}
+else showMenu(x0,y0,["pasteAll","pasteVals","pasteFmt"]);
+},450);
+const mv=ev=>{if(Math.abs(ev.clientX-x0)>8||Math.abs(ev.clientY-y0)>8)off();};
+function off(){clearTimeout(t);removeEventListener("pointermove",mv);
+removeEventListener("pointerup",off);removeEventListener("pointercancel",off);}
+addEventListener("pointermove",mv);addEventListener("pointerup",off);
+addEventListener("pointercancel",off);
+});
+$("gridwrap").addEventListener("contextmenu",e=>{if(MOB.matches)e.preventDefault();});
+document.addEventListener("pointerdown",e=>{if(!$("mmenu").hidden&&!e.target.closest("#mmenu"))hideMenu();},true);
+MOB.addEventListener("change",()=>{closeSheet();hideMenu();});
+/* ---------- boot ---------- */
+load();
+if(!wb.name)wb.name="Simple xlsx";
+$("appname").textContent=wb.name;
+applyName();
+fitRows();
+lastSnap=snapshot();
+buildGrid();
+renderTabs();
+</script>
+</body>
+</html>

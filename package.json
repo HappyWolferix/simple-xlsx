@@ -1,0 +1,10 @@
+{
+  "name": "simple-xlsx",
+  "private": true,
+  "license": "MIT",
+  "description": "Single-file spreadsheet page (gridfile.html) and its tests",
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node test/run.js"
+  }
+}
