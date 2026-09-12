@@ -139,7 +139,14 @@ input[data-pick]:focus{box-shadow:0 0 0 2px var(--accent)}
 #sizetip{position:fixed;display:none;z-index:30;background:var(--ink);color:#fff;font-size:11px;
   padding:3px 7px;border-radius:4px;pointer-events:none;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 #dropline{position:absolute;display:none;background:var(--accent);z-index:8;pointer-events:none;border-radius:1px}
-#morerows{margin:6px 0 12px 44px;font-size:12px;color:var(--ink-soft)}
+#grow{margin:6px 0 12px 44px}
+/* the column extender lives past the last column header; its lane spans the full grid
+   height so the button can stick to the top edge while the sheet scrolls under it */
+#colgrow{position:absolute;top:0;bottom:0;padding-left:8px}
+#colgrow button{position:sticky;top:0}
+#grow button,#colgrow button{font-size:12px;color:var(--ink-soft);border:0;background:none;
+  padding:0;cursor:pointer;white-space:nowrap;line-height:22px}
+#grow button:disabled,#colgrow button:disabled{opacity:.45;cursor:default}
 #fill{position:absolute;width:8px;height:8px;background:var(--sel);border:1px solid #fff;cursor:crosshair;z-index:5}
 #editor{position:absolute;z-index:6;border:2px solid var(--sel);padding:0 4px;font:inherit;display:none;background:#fff}
 select#editor{padding:0}
@@ -210,7 +217,7 @@ thead th>div,tbody th>div{position:relative;width:100%;height:100%;display:flex;
   #cellname{min-width:56px;flex:none}/* fixed name box, input takes the rest */
   #finput{min-width:0}
   #tabs{display:none}/* the sheet list moved into the ☰ menu */
-  #morerows{margin-left:10px}
+  #grow{margin-left:10px}
   /* bottom icon strip, clear of the home indicator */
   /* directly under the app bar and above the formula bar: the actions stay
      where the eye looks for them, in the same place on every screen */
@@ -969,6 +976,15 @@ function shiftFormula(src,dc,dr){
 /* ---------- rendering ---------- */
 const gridpos=$("gridpos");
 let table,fillHandle;
+// the +rows / +columns buttons under the grid; both rebuild it in place
+function growBtn(id,label,atLimit,extend){
+  const b=document.createElement("button");
+  b.id=id;b.textContent=label;
+  b.title=atLimit?"The grid is at its maximum size":"Extend the grid";
+  b.disabled=atLimit;
+  b.onclick=()=>{extend();buildGrid();};
+  return b;
+}
 function buildGrid(){
   if(editing)cancelEdit();      // an editor positioned over the old grid must not survive it
   else hideEditor();
@@ -989,14 +1005,20 @@ function buildGrid(){
   tbody.innerHTML=html;
   table.append(thead,tbody);
   gridpos.appendChild(table);
-  sizeTable();
+  const colgrow=document.createElement("div");
+  colgrow.id="colgrow";
+  colgrow.appendChild(growBtn("morecols","+10 columns",COLS>=XL_MAXCOL,
+    ()=>{COLS=Math.min(XL_MAXCOL,COLS+10);}));
+  gridpos.appendChild(colgrow);
+  sizeTable();   // after colgrow: it places the lane at the table's right edge
   fillHandle=document.createElement("div");fillHandle.id="fill";fillHandle.style.display="none";
   fillHandle.addEventListener("mousedown",fillHandleDown); // the handle is rebuilt with the grid
   gridpos.appendChild(fillHandle);
-  const more=document.createElement("button");
-  more.id="morerows";more.textContent="+100 rows";more.title="Extend the grid";
-  more.onclick=()=>{ROWS+=100;buildGrid();};
-  gridpos.appendChild(more);
+  const grow=document.createElement("div");
+  grow.id="grow";
+  grow.appendChild(growBtn("morerows","+100 rows",ROWS>=XL_MAXROW,
+    ()=>{ROWS=Math.min(XL_MAXROW,ROWS+100);}));
+  gridpos.appendChild(grow);
   paintAll();
 }
 // pin the table to the sum of its column widths so the window size can never rescale it
@@ -1005,6 +1027,8 @@ function sizeTable(){
   let w=44;
   for(let c=0;c<COLS;c++)w+=sh.colW[c]||DEFW;
   table.style.width=w+"px";
+  const cg=$("colgrow");
+  if(cg)cg.style.left=w+"px";  // sits immediately past the last column header
 }
 function paintAll(){
   evalCache.clear();cfReset();

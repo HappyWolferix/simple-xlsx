@@ -99,7 +99,8 @@ someone is running.
 
 ## Limits
 
-- 26 columns and 100 rows to start with; add more as you need them.
+- 26 columns and 100 rows to start with; +100 rows under the grid and +10 columns
+  past the last column header add more, up to 200 columns and 5000 rows.
 - Importing an `.xlsx` keeps values, formulas we implement, colours, borders, number
   formats, column widths and row heights. Anything else — charts, images, pivot
   tables, macros — is dropped, and a formula using a function we do not have keeps

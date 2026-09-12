@@ -36,6 +36,13 @@ is(sigs.filter(n=>!(n in API.FNS)).join(",")||"none","none","every signature nam
 const badsig=sigs.filter(n=>API.SIG.get(n).d===undefined||API.SIG.get(n).d==="");
 is(badsig.join(",")||"none","none","every signature carries a description");
 
+/* The grow buttons under the grid must stay clamped to the import guard rails, or an
+   over-extended grid would render cells the importer can never fill. */
+is(/ROWS=Math\.min\(XL_MAXROW,ROWS\+100\)/.test(html),true,
+  "the +100 rows button clamps to XL_MAXROW");
+is(/COLS=Math\.min\(XL_MAXCOL,COLS\+10\)/.test(html),true,
+  "the +10 columns button clamps to XL_MAXCOL");
+
 // what the XLSX importer accepts is derived from the table, so the two cannot drift
 is(/const XL_FNS=new Set\(Object\.keys\(FNS\)\);/.test(html),true,
    "the XLSX import whitelist is derived from the function table");
